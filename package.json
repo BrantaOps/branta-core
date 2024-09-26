@@ -1,7 +1,7 @@
 {
   "name": "branta",
   "productName": "Branta",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "build/app/main.js",
   "author": "Branta LLC",
   "description": "Verify your bitcoin payments.",
