@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="header">
+        <div class="title">{{ wallet ? 'Edit' : 'Add' }} Wallet</div>
+    </div>
+    <form [formGroup]="formGroup" class="form">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" />
+        </mat-form-field>
+        <div class="row">
+            <mat-form-field class="large">
+                <mat-label>Policy Type</mat-label>
+                <mat-select formControlName="policyType">
+                    @for (type of policyTypes; track type) {
+                        <mat-option [value]="type">{{ type }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            @if (isMultiSig) {
+                <mat-form-field>
+                    <mat-label>M</mat-label>
+                    <input matInput type="number" formControlName="m" min="1" [max]="formGroup.get('n')?.value" />
+                    @if (formGroup.get('m')?.hasError('max')) {
+                        <mat-error>M must be less than N.</mat-error>
+                    }
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>N</mat-label>
+                    <input matInput type="number" formControlName="n" min="1" />
+                </mat-form-field>
+            }
+        </div>
+        <mat-tab-group formArrayName="keys">
+            @for (control of keysFormArrayGroups; track control; let index = $index) {
+                <mat-tab [label]="'xpub' + index" class="key" [formGroupName]="index">
+                    <div class="contents">
+                        <mat-form-field class="form-field xpub">
+                            <mat-label>
+                                <span>Extended Public Key</span>
+                                @if (isMultiSig) {
+                                    <span> {{ index + 1 }}</span>
+                                }
+                            </mat-label>
+                            <textarea matInput formControlName="value"></textarea>
+                            @if (control.get('value')?.hasError('pattern')) {
+                                <mat-error>Invalid Extended Public Key.</mat-error>
+                            }
+                            @if (control.get('value')?.hasError('xpub')) {
+                                <mat-error>xpub has correct format, but is not valid.</mat-error>
+                            }
+                        </mat-form-field>
+                        <mat-form-field class="form-field">
+                            <mat-label>Derivation Path</mat-label>
+                            <input matInput formControlName="derivationPath" />
+                            @if (control.get('derivationPath')?.hasError('pattern')) {
+                                <mat-error>Invalid Derivation Path. Must only contain numbers and forward slashes.</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </mat-tab>
+            }
+        </mat-tab-group>
+    </form>
+    <div class="actions">
+        <button mat-button color="accent" [routerLink]="'/wallets'">Cancel</button>
+        <button mat-flat-button color="accent" (click)="submit()" [disabled]="!formGroup.valid || (wallet && !formGroup.dirty)">{{ wallet ? 'Update' : 'Add' }}</button>
+    </div>
+</div>

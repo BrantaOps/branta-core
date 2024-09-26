@@ -1,0 +1,15 @@
+<div class="app-container">
+    <div class="title-bar" [ngClass]="titleBarClass"></div>
+    <div class="app">
+        <app-navigation></app-navigation>
+        <div class="content">
+            <div class="router-content">
+                <router-outlet></router-outlet>
+            </div>
+            <div class="footer">
+                <button mat-button color="accent" (click)="onHelp()">Help</button>
+                <div class="version">{{ version }}</div>
+            </div>
+        </div>
+    </div>
+</div>

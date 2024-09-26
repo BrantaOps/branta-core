@@ -1,0 +1,65 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <Fragment>
+        <ComponentGroup Id="AppComponents"
+                        Directory="INSTALLFOLDER">
+            <Files Include="..\..\..\out\Branta-win32-x64\**\*" />
+
+            <Component Id="StartMenuFolder"
+                       Guid="1879B3CD-B1B3-4849-8205-74E48F1FA3C9"
+                       Directory="AppProgramsFolder">
+                <RemoveFolder Id="RemoveStartMenuFolder"
+                              On="uninstall" />
+
+                <RegistryValue Root="HKCU"
+                               Key="Software\Branta LLC\Branta"
+                               Name="installed"
+                               Type="integer"
+                               Value="1"
+                               KeyPath="yes" />
+
+                <Shortcut Id="ApplicationStartMenuShortcut"
+                          Name="Branta"
+                          Description="!(loc.AppDescription)"
+                          Target="[INSTALLFOLDER]branta.exe"
+                          WorkingDirectory="INSTALLFOLDER"
+                          Icon="BrantaIcon" />
+            </Component>
+
+            <Component Id="StartupFolder"
+                       Guid="151AB2F1-2EE2-4183-8CE8-6DA921CC3D78"
+                       Directory="StartupFolder">
+                <RegistryValue Root="HKCU"
+                               Key="Software\Branta LLC\Branta"
+                               Name="startup"
+                               Type="integer"
+                               Value="1"
+                               KeyPath="yes" />
+
+                <Shortcut Id="ApplicationStartupShortcut"
+                          Name="Branta"
+                          Description="!(loc.AppDescription)"
+                          Target="[INSTALLFOLDER]branta.exe"
+                          WorkingDirectory="INSTALLFOLDER"
+                          Icon="BrantaIcon"
+                          Arguments="headless" />
+            </Component>
+
+          <Component Id="RegistryComponent"
+                     Guid="095EBA89-68D6-4C42-9658-960CCF3A95A4">
+              <RegistryKey Root="HKCR" Key="branta">
+                  <RegistryValue Value="URL:branta" />
+                  <RegistryValue Name="URL Protocol" Value="" />
+
+                  <RegistryKey Key="shell">
+                      <RegistryKey Key="open">
+                          <RegistryKey Key="command">
+                              <RegistryValue Value="[INSTALLFOLDER]branta.exe %1" />
+                          </RegistryKey>
+                      </RegistryKey>
+                  </RegistryKey>
+              </RegistryKey>
+          </Component>
+
+        </ComponentGroup>
+    </Fragment>
+</Wix>

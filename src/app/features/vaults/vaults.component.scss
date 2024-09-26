@@ -1,0 +1,64 @@
+@import '../../../styles.scss';
+
+:host {
+    height: 100%;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+
+    .header {
+        height: 40px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .title {
+            font-size: 20px;
+        }
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+
+        .vault {
+            @extend .app-card;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+
+            .logo {
+                height: 40px;
+
+                img {
+                    height: 100%;
+                }
+            }
+
+            .details {
+                flex: 1;
+
+                .title {
+                    font-size: 18px;
+                }
+
+                .subtitle {
+                    font-size: 14px;
+                    color: $text-gray;
+                }
+            }
+        }
+    }
+}

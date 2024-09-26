@@ -1,0 +1,63 @@
+:host {
+    height: 100%;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    padding-right: 15px;
+
+    .header {
+        .title {
+            font-size: 20px;
+        }
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+
+            .mat-mdc-form-field {
+                flex: 1;
+
+                &.large {
+                    flex: 2;
+                }
+            }
+        }
+
+
+    }
+
+    .actions {
+        display: flex;
+        gap: 20px;
+        justify-content: end;
+    }
+}
+
+::ng-deep .mat-mdc-tab-body-content {
+    .contents {
+        margin-top: 15px;
+
+        .form-field {
+            width: 100%;
+
+            &.xpub {
+                height: 110px;
+            }
+        }
+    }
+}

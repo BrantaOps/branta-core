@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="header">
+        <div class="title">My Wallets</div>
+        <button mat-flat-button color="accent" [routerLink]="'add'">
+            <mat-icon>add</mat-icon>
+            <span>Add</span>
+        </button>
+    </div>
+    <div class="content">
+        @for (wallet of wallets; track wallet) {
+            <div class="wallet">
+                <div class="header">
+                    <div class="title">{{ wallet.name }}</div>
+                    <div>
+                        <button mat-icon-button (click)="editWallet(wallet.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="openDialog(wallet)" color="warn">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="details">
+                    @for (key of wallet.keys; track key) {
+                        <div class="key" [matTooltip]="key.value">
+                            <div>{{ key.value | xpub }}</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        @if (wallets.length == 0) {
+            <div class="no-wallets">No wallets yet.</div>
+        }
+    </div>
+</div>

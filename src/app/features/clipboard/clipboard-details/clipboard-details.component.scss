@@ -1,0 +1,63 @@
+@import '../../../../styles.scss';
+
+.container {
+    @extend .app-card;
+
+    .header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    .content {
+        .item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+
+            .title {
+                color: $text-gray;
+                min-width: 150px;
+                text-align: right;
+            }
+
+            .value {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                gap: 10px;
+
+                .pill {
+                    padding: 5px;
+                    font-size: 12px;
+                    border-radius: 8px;
+
+                    &.found {
+                        background: $success-color;
+                    }
+
+                    &.not-found {
+                        background: $warn-color;
+                    }
+                }
+            }
+        }
+        .default {
+            display: flex;
+            justify-content: center;
+            color: $text-gray;
+        }
+
+        .unexpected {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-bottom: -15px;
+        }
+    }
+}
+
+.value {
+    word-break: break-all;
+}

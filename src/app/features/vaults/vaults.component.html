@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="header">
+        <div class="title">Vaults</div>
+    </div>
+    <div class="content">
+        @for (vault of vaults; track vault) {
+            <div class="vault">
+                <div class="logo" matTooltip="Unknown Custodian">
+                    <img src="assets/black-circle.svg" />
+                </div>
+                <div class="details">
+                    <div class="title">{{ vault.name }}</div>
+                    @if (vault.policyType === PolicyType.MultiSig) {
+                        <div class="subtitle">{{ vault.m }} of {{ vault.n }} Multi Sig</div>
+                    } @else {
+                        <div class="subtitle">Single Sig</div>
+                    }
+                </div>
+                <div>
+                    <button mat-icon-button (click)="openDialog(vault)" color="warn">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <Package Name="Branta"
+             Manufacturer="Branta LLC"
+             Version="0.2.0"
+             UpgradeCode="4df52912-9d80-4a14-b98b-33a114a4f5ac">
+        <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+
+        <MediaTemplate EmbedCab="yes" />
+
+        <Icon Id="BrantaIcon"
+              SourceFile="..\..\..\resources\icon.ico" />
+
+        <Feature Id="Main">
+            <ComponentGroupRef Id="AppComponents" />
+            <ComponentRef Id="StartMenuFolder" />
+            <ComponentRef Id="StartupFolder" />
+        </Feature>
+    </Package>
+</Wix>

@@ -1,0 +1,55 @@
+<div class="container">
+    @if (!clipboardItem || isAddressClipboardItem(clipboardItem)) {
+        <div class="header">Clipboard</div>
+    } @else {
+        <div class="header">Clipboard: {{ clipboardItem.name }}</div>
+    }
+    <div class="content">
+        @if (clipboardItem) {
+            @if (isAddressClipboardItem(clipboardItem)) {
+                <div class="item">
+                    <div class="title">Address:</div>
+                    <div class="value">{{ clipboardItem.address }}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Wallet Name:</div>
+                    <div class="value">
+                        <div>{{ clipboardItem.walletName }}</div>
+                        @if (clipboardItem.walletName) {
+                            <div class="pill found">FOUND</div>
+                        } @else {
+                            <div class="pill not-found">NOT FOUND</div>
+                        }
+                    </div>
+                </div>
+                <div class="item" *ngIf="clipboardItem.derivationPath">
+                    <div class="title">Derivation Path:</div>
+                    <div class="value">{{ clipboardItem.derivationPath }}</div>
+                </div>
+                <div class="unexpected">
+                    <button mat-button color="accent" (click)="onShareFeedback()">Unexpected? Share feedback</button>
+                </div>
+            } @else if (isPaymentClipboardItem(clipboardItem)) {
+                <div class="item">
+                    <div class="title">Value:</div>
+                    <div class="value">{{ clipboardItem.value }}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Merchant:</div>
+                    <div class="value">{{ clipboardItem.merchant }}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Description:</div>
+                    <div class="value">{{ clipboardItem.description }}</div>
+                </div>
+                <div class="unexpected">
+                    <button mat-button color="accent" (click)="onShareFeedback()">Unexpected? Share feedback</button>
+                </div>
+            } @else {
+                <div class="value" *ngIf="!clipboardItem.private">{{ clipboardItem.value }}</div>
+            }
+        } @else {
+            <div class="default">No Bitcoin/Nostr content detected.</div>
+        }
+    </div>
+</div>

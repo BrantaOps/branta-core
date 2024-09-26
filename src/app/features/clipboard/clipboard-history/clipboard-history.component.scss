@@ -1,0 +1,47 @@
+@import '../../../../styles.scss';
+
+:host {
+    flex: 1;
+    display: flex;
+    overflow-y: auto;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    @extend .app-card;
+
+    .header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+
+        .item {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+            margin-bottom: 12px;
+            word-break: break-all;
+        }
+
+        .default {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $text-gray;
+        }
+    }
+}

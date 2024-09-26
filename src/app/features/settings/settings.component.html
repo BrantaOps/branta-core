@@ -1,0 +1,37 @@
+<div class="container">
+    <form [formGroup]="formGroup">
+        <div class="settings">
+            <div class="section">
+                <div class="title">General</div>
+                <div class="option">
+                    <mat-slide-toggle formControlName="checkoutMode">Checkout Mode</mat-slide-toggle>
+                    <mat-icon class="icon material-symbols-outlined" [matTooltip]="checkoutModeTooltip" matTooltipPosition="right">help</mat-icon>
+                </div>
+            </div>
+            <div class="section" formGroupName="generalNotifications">
+                <div class="title">Notifications</div>
+                <div class="option">
+                    <mat-slide-toggle formControlName="lightningAddress">Notify for Lightning Addresses</mat-slide-toggle>
+                </div>
+                <div class="option">
+                    <mat-slide-toggle formControlName="bitcoinAddress">Notify for Bitcoin Addresses</mat-slide-toggle>
+                </div>
+                <div class="option">
+                    <mat-slide-toggle formControlName="bitcoinPublicKey">Notify for Extended Public Key</mat-slide-toggle>
+                </div>
+                <div class="option">
+                    <mat-slide-toggle formControlName="nostrPublicKey">Notify for Nostr Public Key</mat-slide-toggle>
+                </div>
+                <div class="option">
+                    <mat-slide-toggle formControlName="nostrPrivateKey">Notify for Nostr Private Key</mat-slide-toggle>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="option">
+                <mat-slide-toggle formControlName="developerMode">Developer Mode</mat-slide-toggle>
+                <mat-icon class="icon material-symbols-outlined" [matTooltip]="developerModeTooltip" matTooltipPosition="right">help</mat-icon>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="top">
+        <div class="nav-item" [routerLink]="'clipboard'" routerLinkActive="active" matTooltip="Clipboard" matTooltipPosition="right">
+            <mat-icon>content_paste</mat-icon>
+            <span class="title">Clipboard</span>
+        </div>
+        <div class="nav-item" [routerLink]="'wallets'" routerLinkActive="active" matTooltip="My Wallets" matTooltipPosition="right">
+            <mat-icon>wallet</mat-icon>
+            <span class="title">My Wallets</span>
+        </div>
+        @if (displayVaults) {
+            <div class="nav-item" [routerLink]="'vaults'" routerLinkActive="active" matTooltip="Vaults" matTooltipPosition="right">
+                <mat-icon>lock</mat-icon>
+                <span class="title">Vaults</span>
+            </div>
+        }
+    </div>
+    <div class="bottom">
+        <div class="nav-item" [routerLink]="'settings'" routerLinkActive="active" matTooltip="Settings" matTooltipPosition="right">
+            <mat-icon>settings</mat-icon>
+            <span class="title">Settings</span>
+        </div>
+    </div>
+</div>

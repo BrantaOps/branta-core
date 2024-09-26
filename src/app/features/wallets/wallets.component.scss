@@ -1,0 +1,57 @@
+@import '../../../styles.scss';
+
+:host {
+    height: 100%;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+
+    .header {
+        height: 40px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .title {
+            font-size: 20px;
+        }
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+
+        .wallet {
+            @extend .app-card;
+
+            .header {
+                .title {
+                    font-size: 18px;
+                }
+            }
+
+            .details {
+                .key {
+                    margin-bottom: 8px;
+                }
+            }
+        }
+    }
+
+    .no-wallets {
+        margin-top: 20px;
+        text-align: center;
+        color: $text-gray;
+    }
+}

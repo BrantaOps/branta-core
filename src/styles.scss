@@ -1,0 +1,76 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+html,
+body {
+    height: 100%;
+    background: #1b1b1b;
+    color: #fff;
+}
+body {
+    margin: 0;
+    font-family: 'Avenir', sans-serif;
+}
+
+$contrast-light: #fff;
+
+@function create-palette($base-color) {
+    $hues: (
+        50: lighten($base-color, 40%),
+        100: lighten($base-color, 30%),
+        200: lighten($base-color, 20%),
+        300: lighten($base-color, 10%),
+        400: lighten($base-color, 5%),
+        500: $base-color,
+        600: darken($base-color, 5%),
+        700: darken($base-color, 10%),
+        800: darken($base-color, 20%),
+        900: darken($base-color, 30%),
+        contrast: (
+            50: #000,
+            100: #000,
+            200: #000,
+            300: #000,
+            400: #000,
+            500: #fff,
+            600: #fff,
+            700: #fff,
+            800: #fff,
+            900: #fff
+        )
+    );
+
+    @return mat.define-palette($hues);
+}
+
+$primary-color: #b49145;
+$secondary-color: #466362;
+$success-color: #4AB15E;
+$warn-color: #BA3F1D;
+$error-color: #b15e4a;
+
+$custom-primary: create-palette($primary-color);
+$custom-accent: create-palette($secondary-color);
+$custom-warn: create-palette($error-color);
+
+$custom-theme: mat.define-dark-theme(
+    (
+        color: (
+            primary: $custom-primary,
+            accent: $custom-accent,
+            warn: $custom-warn
+        ),
+        typography: mat.define-typography-config(),
+        density: 0
+    )
+);
+
+@include mat.all-component-themes($custom-theme);
+
+.app-card {
+    background: #353130;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+$text-gray: #bbbbbb;

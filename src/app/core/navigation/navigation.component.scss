@@ -1,0 +1,50 @@
+:host {
+    display: flex;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    justify-content: space-between;
+
+    .top,
+    .bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+
+        &:hover {
+            background: #2b2b2b;
+        }
+
+        &.active {
+            background: #3b3b3b;
+        }
+
+        .title {
+            display: none;
+        }
+
+        @media screen and (min-width: 850px) {
+            .title {
+                display: block;
+            }
+
+            .mat-tooltip {
+                display: none;
+            }
+        }
+    }
+}
