@@ -1,5 +1,6 @@
 windows:
 	ng build --base-href ./
+	npm run build
 	npm run package
 	dotnet build installers/windows/Branta.Wix --configuration Release --arch win-64
 
