@@ -1,16 +1,108 @@
+import { Address, AddressType } from "../../src/app/shared/models/address";
 import { AddressClipboardItem } from "../../src/app/shared/models/clipboard-item";
-import { ExtendedPublicKey, Wallet } from "../../src/app/shared/models/wallet.model";
+import { ExtendedPublicKey, PolicyType, Wallet } from "../../src/app/shared/models/wallet.model";
 
 const bitcoin = require('bitcoinjs-lib');
 const ecc = require('tiny-secp256k1');
 const { BIP32Factory } = require('bip32');
 const BIP84 = require('bip84');
 
-function singleSig(wallet: Wallet, address: string, i: number, bip32: any): AddressClipboardItem | null {
+function getPrefix(address: string) {
+    if (address.startsWith('1')) {
+        return '1';
+    }
+
+    if (address.startsWith('3')) {
+        return '3';
+    }
+
+    if (address.startsWith('bc1q')) {
+        return 'bc1q';
+    }
+
+    if (address.startsWith('bc1p')) {
+        return 'bc1p';
+    }
+
+    return '';
+}
+
+export function getAllAddresses(wallet: Wallet, i: number): Address[] {
+    var bip32 = BIP32Factory(ecc);
+
+    if (wallet.policyType == PolicyType.SingleSig) {
+        return [AddressType.PayToPublicKeyHash, AddressType.PayToWitnessPublicKeyHash]
+            .map((type) => {
+                var address = getSingleSigAddress(wallet, i, type, bip32);
+                var prefix = getPrefix(address);
+
+                return {
+                    value: address,
+                    prefix: prefix,
+                    remainder: address.replace(new RegExp(`^${prefix}`), ''),
+                    type: type.toString(),
+                    selected: false
+                } as Address;
+            });
+    } else {
+        return [AddressType.PayToWitnessPublicKeyHash, AddressType.PayToScriptHash]
+            .map((type) => {
+                var address = getMultiSigAddress(wallet, i, type, bip32);
+                var prefix = getPrefix(address);
+
+                return {
+                    value: address,
+                    prefix: prefix,
+                    remainder: address.replace(new RegExp(`^${prefix}`), ''),
+                    type: type.toString(),
+                    selected: false
+                } as Address;
+            });
+    }
+}
+
+function getSingleSigAddress(wallet: Wallet, i: number, type: AddressType, bip32: any): string {
     var pubkey = toHex(wallet.keys[0], i, bip32);
 
-    if (bitcoin.payments.p2pkh({ pubkey })?.address != address &&
-        bitcoin.payments.p2wpkh({ pubkey })?.address != address) {
+    if (type == AddressType.PayToPublicKeyHash) {
+        return bitcoin.payments.p2pkh({ pubkey })?.address;
+    } else if (type == AddressType.PayToWitnessPublicKeyHash) {
+        return bitcoin.payments.p2wpkh({ pubkey })?.address;
+    }
+
+    throw Error("Single sig address type not found.");
+}
+
+function getMultiSigAddress(wallet: Wallet, i: number, type: AddressType, bip32: any): string {
+    var pubkeys = wallet.keys
+        .map((key) => toHex(key, i, bip32))
+        .map((hex) => Buffer.from(hex, 'hex'))
+        .sort((a, b) => {
+            if (a.equals(b)) return 0;
+            return a.compare(b);
+        });
+    if (type == AddressType.PayToWitnessPublicKeyHash) {
+        var p2wsh = bitcoin.payments.p2wsh({
+            redeem: bitcoin.payments.p2ms({ m: wallet.m, pubkeys })
+        });
+
+        return p2wsh.address;
+    } else if (type == AddressType.PayToScriptHash) {
+        const { output } = bitcoin.payments.p2ms({
+            m: wallet.m,
+            pubkeys: pubkeys
+        });
+        const p2sh = bitcoin.payments.p2sh({ redeem: { output } });
+
+        return p2sh.address;
+    }
+
+    throw Error("Multi sig address type not found.");
+}
+
+function singleSig(wallet: Wallet, address: string, i: number, bip32: any): AddressClipboardItem | null {
+    if (getSingleSigAddress(wallet, i, AddressType.PayToPublicKeyHash, bip32) != address &&
+        getSingleSigAddress(wallet, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address) {
         return null;
     }
 
@@ -35,25 +127,8 @@ function toHex(key: ExtendedPublicKey, i: number, bip32: any) {
 }
 
 function multiSig(wallet: Wallet, address: string, i: number, bip32: any): AddressClipboardItem | null {
-    var pubkeys = wallet.keys
-        .map((key) => toHex(key, i, bip32))
-        .map((hex) => Buffer.from(hex, 'hex'))
-        .sort((a, b) => {
-            if (a.equals(b)) return 0;
-            return a.compare(b);
-        });
-
-    var p2wsh = bitcoin.payments.p2wsh({
-        redeem: bitcoin.payments.p2ms({ m: wallet.m, pubkeys })
-    });
-
-    const { output } = bitcoin.payments.p2ms({
-        m: wallet.m,
-        pubkeys: pubkeys
-    });
-    const p2sh = bitcoin.payments.p2sh({ redeem: { output } });
-
-    if (p2wsh?.address != address && p2sh.address != address) {
+    if (getMultiSigAddress(wallet, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address &&
+        getMultiSigAddress(wallet, i, AddressType.PayToScriptHash, bip32) != address) {
         return null;
     }
 
