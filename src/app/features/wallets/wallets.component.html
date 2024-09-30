@@ -9,23 +9,24 @@
     <div class="content">
         @for (wallet of wallets; track wallet) {
             <div class="wallet">
-                <div class="header">
-                    <div class="title">{{ wallet.name }}</div>
-                    <div>
-                        <button mat-icon-button (click)="editWallet(wallet.id)">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="openDialog(wallet)" color="warn">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
+                <div class="logo" matTooltip="Unknown Custodian">
+                    <img [src]="'assets/wallet/icon/' + getIcon(wallet)" width="40" />
                 </div>
                 <div class="details">
-                    @for (key of wallet.keys; track key) {
-                        <div class="key" [matTooltip]="key.value">
-                            <div>{{ key.value | xpub }}</div>
-                        </div>
+                    <div class="title">{{ wallet.name }}</div>
+                    @if (wallet.policyType === PolicyType.MultiSig) {
+                        <div class="subtitle">{{ wallet.m }} of {{ wallet.n }} Multi Sig</div>
+                    } @else {
+                        <div class="subtitle">Single Sig</div>
                     }
+                </div>
+                <div>
+                    <button mat-icon-button (click)="editWallet(wallet.id)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="openDialog(wallet)" color="warn">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </div>
             </div>
         }

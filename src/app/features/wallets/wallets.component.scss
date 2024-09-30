@@ -34,16 +34,29 @@
 
         .wallet {
             @extend .app-card;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
 
-            .header {
-                .title {
-                    font-size: 18px;
+            .logo {
+                height: 40px;
+
+                img {
+                    height: 100%;
                 }
             }
 
             .details {
-                .key {
-                    margin-bottom: 8px;
+                flex: 1;
+
+                .title {
+                    font-size: 18px;
+                }
+
+                .subtitle {
+                    font-size: 14px;
+                    color: $text-gray;
                 }
             }
         }

@@ -5,16 +5,19 @@ import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Address } from '../../../shared/models/address';
+import { Icon } from '../../../shared/models/icon';
 import { ExtendedPublicKey, PolicyType, Wallet } from '../../../shared/models/wallet.model';
 import { ClipboardService } from '../../../shared/services/clipboard.service';
 import { WalletService } from '../../../shared/services/wallet.service';
 import { XpubValidatorService } from '../../../shared/services/xpub-validator.service';
+import { iconOptions } from '../../../shared/models/icon';
+import { IconOption } from '../../../shared/models/icon';
 
 interface AddressConfirmed {
     address: string;
@@ -59,7 +62,12 @@ export class WalletFormComponent {
         {
             label: 'Multi Signature',
             value: PolicyType.MultiSig
-        }];
+        }
+    ];
+
+    Icon = Icon;
+    iconOptions = iconOptions;
+    selectedIcon: any;
 
     constructor(
         private fb: FormBuilder,
@@ -74,8 +82,12 @@ export class WalletFormComponent {
             var walletId: number = params['walletId'];
             this.existingWallet = this.walletService.getById(walletId) ?? null;
 
+            this.selectedIcon = this.existingWallet ? iconOptions.find(option => option.value == this.existingWallet!.icon) : iconOptions[0];
+
+
             this.nameFormGroup = this.fb.group({
                 name: this.fb.control(this.existingWallet?.name ?? '', Validators.required),
+                icon: this.fb.control(this.existingWallet?.icon ?? 0)
             });
 
             this.keysFormGroup = this.fb.group({
@@ -190,6 +202,10 @@ export class WalletFormComponent {
 
     onShareFeedback(): void {
         window.electron.openUrl('https://branta.pro/uses');
+    }
+
+    onIconSelectionChange(event: MatSelectChange) {
+        this.selectedIcon = this.iconOptions.find((option: IconOption) => option.value == event.value);
     }
 
     private get wallet(): Wallet {
