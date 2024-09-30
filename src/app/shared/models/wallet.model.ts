@@ -1,6 +1,9 @@
+import { Icon } from "./icon";
+
 export interface Wallet {
     id: number;
     name: string;
+    icon: Icon,
     policyType: PolicyType;
     m: number;
     n: number;

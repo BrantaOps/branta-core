@@ -1,4 +1,5 @@
 import { dialog } from 'electron';
+import { Icon } from '../../src/app/shared/models/icon';
 import { Vault, VaultCompany } from '../../src/app/shared/models/vault.model';
 import { ExtendedPublicKey, PolicyType } from '../../src/app/shared/models/wallet.model';
 import { loadRecords, saveRecords } from './storage';
@@ -57,12 +58,12 @@ function getKeys(params: URLSearchParams): ExtendedPublicKey[] {
                 values[index] = {
                     ...values[index],
                     value
-                };
+                } as ExtendedPublicKey;
             } else {
                 values[index] = {
                     derivationPath: null,
                     value
-                };
+                } as ExtendedPublicKey;
             }
             continue;
         }
@@ -83,14 +84,14 @@ function getKeys(params: URLSearchParams): ExtendedPublicKey[] {
             values[index] = {
                 value: '',
                 derivationPath: value
-            };
+            } as ExtendedPublicKey;
         }
     }
 
     let result: ExtendedPublicKey[] = [];
 
     for (const index in values) {
-        let value = values[index];
+        let value = values[index] as ExtendedPublicKey;
 
         if (!value.value) {
             throw new XpubRequiredError(index);
@@ -145,6 +146,7 @@ export function urlParser(url: string): Vault {
     return {
         id: 0,
         name,
+        icon: Icon.Default,
         company: params.get('company') as VaultCompany | null,
         policyType: keys.length == 1 ? PolicyType.SingleSig : PolicyType.MultiSig,
         m,

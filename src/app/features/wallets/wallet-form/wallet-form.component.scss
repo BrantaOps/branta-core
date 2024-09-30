@@ -132,3 +132,14 @@
         background: red;
     }
 }
+
+.icon-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+
+    &.trigger {
+        gap: 10px;
+    }
+}
