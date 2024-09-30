@@ -14,6 +14,7 @@ import { WalletService } from './wallet.service';
 })
 export class ClipboardService {
     public clipboardItem = new ReplaySubject<ClipboardItem | null>();
+    public clipboardText = new ReplaySubject<string>();
 
     private _wallets: Wallet[] = [];
     private _vaults: Vault[] = [];
@@ -56,6 +57,8 @@ export class ClipboardService {
     }
 
     private async getClipboardItem(text: string): Promise<ClipboardItem | null> {
+        this.clipboardText.next(text);
+
         if (text == "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa") {
             await window.electron.showNotification('Bitcoin genesis block address copied.', 'We are all Satoshi');
             return {
@@ -67,7 +70,8 @@ export class ClipboardService {
                 private: false
             } as AddressClipboardItem;
         }
-        if (this.addressRegExp.test(text) || this.segwitAddressRegExp.test(text) || this.testnetAddressRegExp.test(text)) {
+
+        if (this.isBitcoinAddress(text)) {
             var vault = await window.electron.verifyAddress(this._vaults, text);
 
             if (vault) {
@@ -170,6 +174,10 @@ export class ClipboardService {
         }
 
         return null;
+    }
+
+    public isBitcoinAddress(text: string) {
+        return this.addressRegExp.test(text) || this.segwitAddressRegExp.test(text) || this.testnetAddressRegExp.test(text);
     }
 
     private async queryPayments(value: string): Promise<PaymentClipboardItem | null> {

@@ -15,4 +15,5 @@ contextBridge.exposeInMainWorld('electron', {
     showNotification: (title: string, body: string) => ipcRenderer.invoke('show-notification', title, body),
     openUrl: (url: string) => ipcRenderer.invoke('open-url', url),
     onVaultCreated: (callback: any) => ipcRenderer.on('vault-created', (_event: any, vault: Vault) => callback(vault)),
+    getAllAddresses: (wallet: Wallet, i: number) => ipcRenderer.invoke('get-all-addresses', wallet, i)
 });

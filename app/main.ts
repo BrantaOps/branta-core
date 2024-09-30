@@ -4,7 +4,7 @@ import * as url from 'url';
 import packageJson from '../package.json';
 import { loadRecords, saveRecords } from './lib/storage.js';
 import { processUrl } from './lib/vault.js';
-import { verifyAddress, verifyXpub } from './lib/verify-address.js';
+import { getAllAddresses, verifyAddress, verifyXpub } from './lib/verify-address.js';
 
 if (process.platform != 'win32') {
     const AutoLaunch = require('auto-launch');
@@ -21,7 +21,7 @@ if (process.platform != 'win32') {
 
     if (process.defaultApp) {
         if (process.argv.length >= 2) {
-          app.setAsDefaultProtocolClient('branta', process.execPath, [path.resolve(process.argv[1])]);
+            app.setAsDefaultProtocolClient('branta', process.execPath, [path.resolve(process.argv[1])]);
         }
     } else {
         app.setAsDefaultProtocolClient('branta');
@@ -166,6 +166,8 @@ function createWindow() {
 
     ipcMain.handle('open-url', async (_event, url) => openUrl(url));
 
+    ipcMain.handle('get-all-addresses', async (_event, wallet, i) => getAllAddresses(wallet, i));
+
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
@@ -218,7 +220,7 @@ app.setAppUserModelId('Branta');
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (process.platform == 'linux' ||
-   process.platform === 'darwin') {
+    process.platform === 'darwin') {
     app.on('open-url', (event, url) => {
         processUrl(mainWindow, [url]);
     });
@@ -245,10 +247,10 @@ if (!gotTheLock) {
 
     app.on('activate', function() {
         if (mainWindow === null) {
-          createWindow();
+            createWindow();
         }
         else if (process.platform == 'darwin') {
-          mainWindow.show();
+            mainWindow.show();
         }
     });
 
