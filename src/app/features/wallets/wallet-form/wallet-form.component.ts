@@ -81,7 +81,7 @@ export class WalletFormComponent {
             this.keysFormGroup = this.fb.group({
                 policyType: this.fb.control(this.existingWallet?.policyType ?? PolicyType.SingleSig),
                 m: this.fb.control(this.existingWallet?.m ?? 1),
-                n: this.fb.control(this.existingWallet?.n ?? 1),
+                n: this.fb.control(this.existingWallet?.n ?? 1, Validators.max(15)),
                 keys: this.fb.array((this.existingWallet?.keys || []).map((key) => this.getKeyForm(key)))
             });
 
