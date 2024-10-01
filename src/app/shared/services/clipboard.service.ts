@@ -76,7 +76,7 @@ export class ClipboardService {
 
             if (vault) {
                 if (this._settings?.generalNotifications.bitcoinAddress) {
-                    await window.electron.showNotification('Bitcoin address detected from ' + vault.walletName, 'Derivation: ' + vault.derivationPath);
+                    await window.electron.showNotification('BTC address: ' + vault.walletName, 'Derivation: ' + vault.derivationPath);
                 }
 
                 return vault;
@@ -87,7 +87,7 @@ export class ClipboardService {
             // Found the users wallet
             if (wallet) {
                 if (this._settings?.generalNotifications.bitcoinAddress) {
-                    await window.electron.showNotification('Bitcoin address detected from ' + wallet.walletName, 'Derivation: ' + wallet.derivationPath);
+                    await window.electron.showNotification('BTC address: ' + wallet.walletName, 'Derivation: ' + wallet.derivationPath);
                 }
 
                 return wallet;
