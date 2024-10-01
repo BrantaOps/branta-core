@@ -27,7 +27,7 @@
                     <div class="value">{{ clipboardItem.derivationPath }}</div>
                 </div>
                 <div class="unexpected">
-                    <button mat-button color="accent" (click)="onShareFeedback()">Unexpected? Share feedback</button>
+                    <button mat-button color="accent" (click)="onShareFeedback()">Unexpected?</button>
                 </div>
             } @else if (isPaymentClipboardItem(clipboardItem)) {
                 <div class="item">
@@ -43,7 +43,7 @@
                     <div class="value">{{ clipboardItem.description }}</div>
                 </div>
                 <div class="unexpected">
-                    <button mat-button color="accent" (click)="onShareFeedback()">Unexpected? Share feedback</button>
+                    <button mat-button color="accent" (click)="onShareFeedback()">Unexpected?</button>
                 </div>
             } @else {
                 <div class="value" *ngIf="!clipboardItem.private">{{ clipboardItem.value }}</div>
