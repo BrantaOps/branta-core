@@ -13,3 +13,5 @@ jobs:
       run: npm i
     - name: Run tests
       run: npm run test
+    - name: audit
+      run: npm audit
