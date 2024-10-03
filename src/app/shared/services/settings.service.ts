@@ -14,6 +14,9 @@ export class SettingsService {
     defaultSettings: Settings = {
         checkoutMode: false,
         developerMode: false,
+        clipboardHistory: {
+            show: true
+        },
         generalNotifications: {
             bitcoinAddress: true,
             bitcoinPublicKey: true,
@@ -55,6 +58,10 @@ export class SettingsService {
         return {
             ...defaults,
             ...overrides,
+            clipboardHistory: {
+                ...defaults.clipboardHistory,
+                ...overrides.clipboardHistory
+            },
             generalNotifications: {
                 ...defaults.generalNotifications,
                 ...overrides.generalNotifications

@@ -2,16 +2,16 @@
     <div class="header">History</div>
     <div class="content">
         @for (item of history; track item) {
-        <div class="item">
-            <div class="text">{{ item }}</div>
-            <button mat-icon-button (click)="onCopyClipboard(item)" [disabled]="item == clipboardContent">
-                <mat-icon>content_copy</mat-icon>
-            </button>
-        </div>
+            <div class="item">
+                <div class="text">{{ item.value }}</div>
+                <button mat-icon-button (click)="onCopyClipboard(item.value)" [disabled]="item.value == clipboardContent">
+                    <mat-icon>content_copy</mat-icon>
+                </button>
+            </div>
         } @if (history.length == 0) {
-        <div class="default">
-            <span>No History to display yet.</span>
-        </div>
+            <div class="default">
+                <span>No History to display yet.</span>
+            </div>
         }
     </div>
 </div>
