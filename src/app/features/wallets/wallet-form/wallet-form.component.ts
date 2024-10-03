@@ -82,12 +82,11 @@ export class WalletFormComponent {
             var walletId: number = params['walletId'];
             this.existingWallet = this.walletService.getById(walletId) ?? null;
 
-            this.selectedIcon = this.existingWallet ? iconOptions.find(option => option.value == this.existingWallet!.icon) : iconOptions[0];
-
+            this.selectedIcon = this.existingWallet ? iconOptions.find(option => option.value == this.existingWallet!.icon) || iconOptions[0] : iconOptions[0];
 
             this.nameFormGroup = this.fb.group({
                 name: this.fb.control(this.existingWallet?.name ?? '', Validators.required),
-                icon: this.fb.control(this.existingWallet?.icon ?? 0)
+                icon: this.fb.control(this.selectedIcon.value)
             });
 
             this.keysFormGroup = this.fb.group({

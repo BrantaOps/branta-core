@@ -9,8 +9,8 @@
     <div class="content">
         @for (wallet of wallets; track wallet) {
             <div class="wallet">
-                <div class="logo" matTooltip="Unknown Custodian">
-                    <img [src]="'assets/wallet/icon/' + getIcon(wallet)" width="40" />
+                <div class="logo" [matTooltip]="getIcon(wallet).label">
+                    <img [src]="'assets/wallet/icon/' + getIcon(wallet).icon" width="40" />
                 </div>
                 <div class="details">
                     <div class="title">{{ wallet.name }}</div>

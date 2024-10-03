@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { iconOptions } from '../../shared/models/icon';
+import { IconOption, iconOptions } from '../../shared/models/icon';
 import { PolicyType, Wallet } from '../../shared/models/wallet.model';
 import { XPubPipe } from '../../shared/pipes/xpub.pipe';
 import { WalletService } from '../../shared/services/wallet.service';
@@ -55,7 +55,7 @@ export class WalletsComponent {
         });
     }
 
-    getIcon(wallet: Wallet): string | undefined {
-        return iconOptions.find((option) => option.value == wallet.icon)?.icon;
+    getIcon(wallet: Wallet): IconOption {
+        return iconOptions.find((option) => option.value == wallet.icon) || iconOptions[0];
     }
 }
