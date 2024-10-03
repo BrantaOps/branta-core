@@ -1,11 +1,11 @@
-import { Component, Pipe } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SettingsService } from '../../shared/services/settings.service';
-import { MatButtonModule } from '@angular/material/button';
 import { HistoryService } from '../../shared/services/history.service';
+import { SettingsService } from '../../shared/services/settings.service';
 
 @Component({
     selector: 'app-settings',
