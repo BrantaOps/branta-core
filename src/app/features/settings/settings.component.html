@@ -26,6 +26,13 @@
                     <mat-slide-toggle formControlName="nostrPrivateKey">Notify for Nostr Private Key</mat-slide-toggle>
                 </div>
             </div>
+            <div class="section" formGroupName="clipboardHistory">
+                <div class="title">History</div>
+                <div class="option">
+                    <mat-slide-toggle formControlName="show">Show History</mat-slide-toggle>
+                </div>
+                <button mat-button color="warn" (click)="onClearHistory()">Clear History</button>
+            </div>
         </div>
         <div class="section">
             <div class="option">

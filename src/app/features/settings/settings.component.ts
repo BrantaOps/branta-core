@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Pipe } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SettingsService } from '../../shared/services/settings.service';
+import { MatButtonModule } from '@angular/material/button';
+import { HistoryService } from '../../shared/services/history.service';
 
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [ReactiveFormsModule, MatSlideToggleModule, MatIconModule, MatTooltipModule],
+    imports: [ReactiveFormsModule, MatSlideToggleModule, MatIconModule, MatTooltipModule, MatButtonModule],
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.scss'
 })
@@ -18,7 +20,7 @@ export class SettingsComponent {
     checkoutModeTooltip = 'Verify BTC/LN checkouts & invoices. Requires internet.';
     developerModeTooltip = 'Only check this if you\'re a developer. Enables staging environment.';
 
-    constructor(private settingsService: SettingsService) {
+    constructor(private settingsService: SettingsService, private historyService: HistoryService) {
         let settings = settingsService.get();
 
         this.formGroup = new FormGroup({
@@ -30,11 +32,18 @@ export class SettingsComponent {
                 nostrPrivateKey: new FormControl(settings.generalNotifications.nostrPrivateKey),
                 lightningAddress: new FormControl(settings.generalNotifications.lightningAddress),
             }),
+            clipboardHistory: new FormGroup({
+                show: new FormControl(settings.clipboardHistory.show)
+            }),
             developerMode: new FormControl(settings.developerMode)
         });
 
         this.formGroup.valueChanges.subscribe((settings) => {
             this.settingsService.save(settings);
         });
+    }
+
+    onClearHistory(): void {
+        this.historyService.clearHistory();
     }
 }

@@ -1,9 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ClipboardItem } from '../../shared/models/clipboard-item';
+import { Settings } from '../../shared/models/settings';
 import { ClipboardService } from '../../shared/services/clipboard.service';
-import { CommonModule } from '@angular/common';
+import { SettingsService } from '../../shared/services/settings.service';
 import { ClipboardDetailsComponent } from './clipboard-details/clipboard-details.component';
 import { ClipboardHistoryComponent } from './clipboard-history/clipboard-history.component';
+import { HistoryService } from '../../shared/services/history.service';
 
 @Component({
     selector: 'app-clipboard',
@@ -14,15 +17,21 @@ import { ClipboardHistoryComponent } from './clipboard-history/clipboard-history
 })
 export class ClipboardComponent {
     clipboardItem: ClipboardItem | null = null;
-    history: string[] = [];
+    history: ClipboardItem[] = [];
+    showHistory: boolean = false;
 
-    constructor(clipboardService: ClipboardService) {
-        clipboardService.clipboardItem.subscribe((item: ClipboardItem | null) => {
-            if (item && item.value && !item.private) {
-                this.history.unshift(item.value);
-            }
-
+    constructor(public clipboardService: ClipboardService, public historyService: HistoryService, public settingsService: SettingsService) {
+        this.clipboardService.clipboardItem.subscribe((item: ClipboardItem | null) => {
             this.clipboardItem = item;
+        });
+
+        this.historyService.history.subscribe((history) => {
+            this.history = history;
+        })
+
+        this.settingsService.settings.subscribe((settings: Settings) => {
+            console.log(settings.clipboardHistory);
+            this.showHistory = settings.clipboardHistory.show;
         });
     }
 }
