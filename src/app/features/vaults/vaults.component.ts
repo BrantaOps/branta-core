@@ -7,6 +7,7 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
 import { Vault, VaultCompany } from '../../shared/models/vault.model';
 import { PolicyType } from '../../shared/models/wallet.model';
 import { VaultService } from '../../shared/services/vault.service';
+import { ClipboardService } from '../../shared/services/clipboard.service';
 
 @Component({
     selector: 'app-vaults',
@@ -23,6 +24,7 @@ export class VaultsComponent {
 
     constructor(
         private vaultService: VaultService,
+        private clipboardService: ClipboardService,
         public dialog: MatDialog,
         private ngZone: NgZone
     ) {
@@ -30,6 +32,8 @@ export class VaultsComponent {
             this.ngZone.run(() => {
                 this.vaults = vaults;
             });
+
+            this.clipboardService.rerunGetClipboardItem();
         });
     }
 
@@ -45,6 +49,8 @@ export class VaultsComponent {
         dialogRef.afterClosed().subscribe((result) => {
             if (result === true) {
                 this.vaultService.removeVault(vault.id);
+
+                this.clipboardService.rerunGetClipboardItem();
             }
         });
     }

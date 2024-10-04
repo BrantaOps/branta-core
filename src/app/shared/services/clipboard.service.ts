@@ -14,6 +14,7 @@ import { WalletService } from './wallet.service';
 })
 export class ClipboardService {
     public clipboardItem = new ReplaySubject<ClipboardItem | null>();
+    private _clipboardText: string = '';
     public clipboardText = new ReplaySubject<string>();
 
     private _wallets: Wallet[] = [];
@@ -39,7 +40,9 @@ export class ClipboardService {
     ) {
         window.electron.onClipboardUpdate((text: string) => {
             this.ngZone.run(async () => {
-                this.clipboardItem.next(await this.getClipboardItem(text));
+                this._clipboardText = text;
+                this.clipboardText.next(text);
+                this.rerunGetClipboardItem();
             });
         });
 
@@ -56,9 +59,11 @@ export class ClipboardService {
         });
     }
 
-    private async getClipboardItem(text: string): Promise<ClipboardItem | null> {
-        this.clipboardText.next(text);
+    public async rerunGetClipboardItem(): Promise<void> {
+        this.clipboardItem.next(await this.getClipboardItem(this._clipboardText));
+    }
 
+    private async getClipboardItem(text: string): Promise<ClipboardItem | null> {
         if (text == "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa") {
             await window.electron.showNotification('Bitcoin genesis block address copied.', 'We are all Satoshi');
             return {

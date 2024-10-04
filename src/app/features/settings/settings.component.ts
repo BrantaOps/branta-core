@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ClipboardService } from '../../shared/services/clipboard.service';
 import { HistoryService } from '../../shared/services/history.service';
 import { SettingsService } from '../../shared/services/settings.service';
 
@@ -20,7 +21,11 @@ export class SettingsComponent {
     checkoutModeTooltip = 'Verify BTC/LN checkouts & invoices. Requires internet.';
     developerModeTooltip = 'Only check this if you\'re a developer. Enables staging environment.';
 
-    constructor(private settingsService: SettingsService, private historyService: HistoryService) {
+    constructor(
+        private settingsService: SettingsService,
+        private historyService: HistoryService,
+        private clipboardService: ClipboardService
+    ) {
         let settings = settingsService.get();
 
         this.formGroup = new FormGroup({
@@ -41,6 +46,15 @@ export class SettingsComponent {
         this.formGroup.valueChanges.subscribe((settings) => {
             this.settingsService.save(settings);
         });
+
+        this.formGroup.get('checkoutMode')?.valueChanges.subscribe(() => {
+            this.clipboardService.rerunGetClipboardItem();
+        });
+
+        this.formGroup.get('developerMode')?.valueChanges.subscribe(() => {
+            this.clipboardService.rerunGetClipboardItem();
+        });
+
     }
 
     onClearHistory(): void {
