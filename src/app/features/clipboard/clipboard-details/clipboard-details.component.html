@@ -12,10 +12,13 @@
                     <div class="value">{{ clipboardItem.address }}</div>
                 </div>
                 <div class="item">
-                    <div class="title">Wallet Name:</div>
+                    <div class="title">Wallet:</div>
                     <div class="value">
-                        <div>{{ clipboardItem.walletName }}</div>
-                        @if (clipboardItem.walletName) {
+                        @if (clipboardItem.wallet) {
+                            <div>
+                                <img [src]="'assets/wallet/icon/' + getIcon(clipboardItem.wallet).icon" height="20" />
+                            </div>
+                            <div class="name">{{ clipboardItem.wallet.name }}</div>
                             <div class="pill found">FOUND</div>
                         } @else {
                             <div class="pill not-found">NOT FOUND</div>

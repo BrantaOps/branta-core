@@ -110,7 +110,7 @@ function singleSig(wallet: Wallet, address: string, i: number, bip32: any): Addr
         name: 'Bitcoin Address',
         value: address,
         address: address,
-        walletName: wallet.name,
+        wallet: wallet,
         derivationPath: `0/${i}`,
         private: false
     };
@@ -136,7 +136,7 @@ function multiSig(wallet: Wallet, address: string, i: number, bip32: any): Addre
         name: 'Bitcoin Address',
         value: address,
         address: address,
-        walletName: wallet.name,
+        wallet: wallet,
         derivationPath: `0/${i}`,
         private: false
     };
