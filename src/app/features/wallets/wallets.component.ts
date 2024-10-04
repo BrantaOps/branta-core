@@ -8,6 +8,7 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
 import { IconOption, iconOptions } from '../../shared/models/icon';
 import { PolicyType, Wallet } from '../../shared/models/wallet.model';
 import { XPubPipe } from '../../shared/pipes/xpub.pipe';
+import { ClipboardService } from '../../shared/services/clipboard.service';
 import { WalletService } from '../../shared/services/wallet.service';
 
 @Component({
@@ -23,6 +24,7 @@ export class WalletsComponent {
 
     constructor(
         private walletService: WalletService,
+        private clipboardService: ClipboardService,
         private router: Router,
         public dialog: MatDialog
     ) {
@@ -51,6 +53,7 @@ export class WalletsComponent {
         dialogRef.afterClosed().subscribe((result) => {
             if (result === true) {
                 this.walletService.removeWallet(wallet.id);
+                this.clipboardService.rerunGetClipboardItem();
             }
         });
     }

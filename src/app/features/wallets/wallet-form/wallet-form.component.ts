@@ -197,6 +197,8 @@ export class WalletFormComponent {
             this.walletService.addWallet(this.wallet);
             this.router.navigate(['wallets']);
         }
+
+        this.clipboardService.rerunGetClipboardItem();
     }
 
     onShareFeedback(): void {
