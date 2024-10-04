@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { ReplaySubject, lastValueFrom } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, lastValueFrom } from 'rxjs';
 import { AddressClipboardItem, ClipboardItem, PaymentClipboardItem } from '../models/clipboard-item';
 import { Settings } from '../models/settings';
 import { Vault } from '../models/vault.model';
@@ -15,7 +15,7 @@ import { WalletService } from './wallet.service';
 export class ClipboardService {
     public clipboardItem = new ReplaySubject<ClipboardItem | null>();
     private _clipboardText: string = '';
-    public clipboardText = new ReplaySubject<string>();
+    public clipboardText = new BehaviorSubject<string>('');
 
     private _wallets: Wallet[] = [];
     private _vaults: Vault[] = [];
