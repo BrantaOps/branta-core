@@ -5,8 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { IconOption, iconOptions } from '../../shared/models/icon';
-import { PolicyType, Wallet } from '../../shared/models/wallet.model';
+import { PolicyType, Wallet, getIcon } from '../../shared/models/wallet.model';
 import { XPubPipe } from '../../shared/pipes/xpub.pipe';
 import { ClipboardService } from '../../shared/services/clipboard.service';
 import { WalletService } from '../../shared/services/wallet.service';
@@ -21,6 +20,8 @@ import { WalletService } from '../../shared/services/wallet.service';
 export class WalletsComponent {
     wallets: Wallet[] = [];
     PolicyType = PolicyType;
+
+    getIcon = getIcon;
 
     constructor(
         private walletService: WalletService,
@@ -56,9 +57,5 @@ export class WalletsComponent {
                 this.clipboardService.rerunGetClipboardItem();
             }
         });
-    }
-
-    getIcon(wallet: Wallet): IconOption {
-        return iconOptions.find((option) => option.value == wallet.icon) || iconOptions[0];
     }
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { AddressClipboardItem, ClipboardItem, PaymentClipboardItem } from '../../../shared/models/clipboard-item';
+import { getIcon } from '../../../shared/models/wallet.model';
 
 @Component({
     selector: 'app-clipboard-details',
@@ -13,8 +14,10 @@ import { AddressClipboardItem, ClipboardItem, PaymentClipboardItem } from '../..
 export class ClipboardDetailsComponent {
     @Input() clipboardItem: ClipboardItem | null;
 
+    getIcon = getIcon;
+
     isAddressClipboardItem(item: ClipboardItem): item is AddressClipboardItem {
-        return 'address' in item && 'walletName' in item && 'derivationPath' in item;
+        return 'address' in item && 'wallet' in item && 'derivationPath' in item;
     }
 
     isPaymentClipboardItem(item: ClipboardItem): item is PaymentClipboardItem {

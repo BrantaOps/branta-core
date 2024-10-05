@@ -1,3 +1,5 @@
+import { Wallet } from "./wallet.model";
+
 export interface ClipboardItem {
     name: string | null;
     value: string | null;
@@ -6,7 +8,7 @@ export interface ClipboardItem {
 
 export interface AddressClipboardItem extends ClipboardItem {
     address: string;
-    walletName: string | null;
+    wallet: Wallet | null;
     derivationPath: string | null;
 }
 

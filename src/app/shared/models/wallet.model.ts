@@ -1,4 +1,4 @@
-import { Icon } from "./icon";
+import { Icon, IconOption, iconOptions } from "./icon";
 
 export interface Wallet {
     id: number;
@@ -18,4 +18,9 @@ export interface ExtendedPublicKey {
 export enum PolicyType {
     SingleSig = 'Single Sig',
     MultiSig = 'Multi Sig'
+}
+
+
+export function getIcon(wallet: Wallet): IconOption {
+    return iconOptions.find((option) => option.value == wallet.icon) || iconOptions[0];
 }
