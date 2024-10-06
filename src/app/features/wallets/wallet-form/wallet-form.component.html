@@ -90,29 +90,31 @@
         </mat-step>
         <mat-step label="Confirm">
             <div class="address-container form">
-                <div class="title">Confirm your first address</div>
+                <div class="title">Confirm address 0:</div>
                 <div class="addresses">
                     @for (address of addresses; track address) {
                         <div class="address">
                             <div class="value">
                                 <div class="prefix">
-                                    {{ address.prefix }}
+                                    <i>{{ address.prefix }}</i>
                                 </div>
                                 <div class="remainder">
-                                    {{ address.remainder }}
+                                    <i>{{ address.remainder }}</i>
                                 </div>
                             </div>
                         </div>
                     }
                 </div>
                 <div class="or">OR</div>
-                <div class="title">Copy any address to confirm wallet</div>
+                <div class="title">Copy any address:</div>
                 @if (addressConfirmed) {
-                    <div [class]="{ 'address-confirmed': true, 'confirmed': addressConfirmed.isConfirmed }">{{ addressConfirmed.address }}</div>
+                    <div [class]="{ 'address-confirmed': true, 'confirmed': addressConfirmed.isConfirmed }">
+                        <i>{{ addressConfirmed.address }}</i>
+                    </div>
                 } @else {
-                    <div style="color: #bbb">No address found in clipboard.</div>
+                    <div style="color: #bbb">-</div>
                 }
-                <button mat-button color="accent" (click)="onShareFeedback()">Don't see your address? Share feedback</button>
+                <button mat-button color="accent" (click)="onShareFeedback()">Don't see your address?</button>
             </div>
             <div>
                 <button mat-button matStepperPrevious (click)="revertConfirmation()">Back</button>
