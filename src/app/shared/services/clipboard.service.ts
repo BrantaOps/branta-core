@@ -42,7 +42,7 @@ export class ClipboardService {
             this.ngZone.run(async () => {
                 this._clipboardText = text;
                 this.clipboardText.next(text);
-                this.rerunGetClipboardItem();
+                this.rerunGetClipboardItem(true);
             });
         });
 
@@ -59,11 +59,11 @@ export class ClipboardService {
         });
     }
 
-    public async rerunGetClipboardItem(): Promise<void> {
-        this.clipboardItem.next(await this.getClipboardItem(this._clipboardText));
+    public async rerunGetClipboardItem(notify: boolean = false): Promise<void> {
+        this.clipboardItem.next(await this.getClipboardItem(this._clipboardText, notify));
     }
 
-    private async getClipboardItem(text: string): Promise<ClipboardItem | null> {
+    private async getClipboardItem(text: string, notify: boolean): Promise<ClipboardItem | null> {
         if (text == "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa") {
             await window.electron.showNotification('Bitcoin genesis block address copied.', 'We are all Satoshi');
             return {
@@ -80,7 +80,7 @@ export class ClipboardService {
             var vault = await window.electron.verifyAddress(this._vaults, text);
 
             if (vault) {
-                if (this._settings?.generalNotifications.bitcoinAddress) {
+                if (this._settings?.generalNotifications.bitcoinAddress && notify) {
                     await window.electron.showNotification('BTC address: ' + vault.wallet?.name, 'Derivation: ' + vault.derivationPath);
                 }
 
@@ -91,7 +91,7 @@ export class ClipboardService {
 
             // Found the users wallet
             if (wallet) {
-                if (this._settings?.generalNotifications.bitcoinAddress) {
+                if (this._settings?.generalNotifications.bitcoinAddress && notify) {
                     await window.electron.showNotification('BTC address: ' + wallet.wallet?.name, 'Derivation: ' + wallet.derivationPath);
                 }
 
@@ -102,13 +102,13 @@ export class ClipboardService {
                 if (this._settings?.checkoutMode) {
                     const paymentItem = await this.queryPayments(text);
 
-                    if (paymentItem) {
+                    if (paymentItem && notify) {
                         await window.electron.showNotification(paymentItem.merchant, paymentItem.description ?? '');
                         return paymentItem;
                     }
                 }
 
-                if (this._settings?.generalNotifications.bitcoinAddress) {
+                if (this._settings?.generalNotifications.bitcoinAddress && notify) {
                     await window.electron.showNotification('New Bitcoin Address in Clipboard', 'Bitcoin Address Detected.');
                 }
                 return {
@@ -123,7 +123,7 @@ export class ClipboardService {
         }
 
         if (this.extendedKeyRegExp.test(text)) {
-            if (this._settings?.generalNotifications.bitcoinPublicKey) {
+            if (this._settings?.generalNotifications.bitcoinPublicKey && notify) {
                 await window.electron.showNotification('Bitcoin Extended Public Key in Clipboard.', 'Sharing can lead to loss of privacy.');
             }
             return {
@@ -134,7 +134,7 @@ export class ClipboardService {
         }
 
         if (this.nostrPubKeyRegExp.test(text)) {
-            if (this._settings?.generalNotifications.nostrPublicKey) {
+            if (this._settings?.generalNotifications.nostrPublicKey && notify) {
                 await window.electron.showNotification('Nostr Public Key in Clipboard.', text);
             }
             return {
@@ -145,7 +145,7 @@ export class ClipboardService {
         }
 
         if (this.nostrPrivateKeyRegExp.test(text)) {
-            if (this._settings?.generalNotifications.nostrPrivateKey) {
+            if (this._settings?.generalNotifications.nostrPrivateKey && notify) {
                 await window.electron.showNotification('Nostr Private Key in Clipboard.', 'Never share this.');
             }
             return {
@@ -160,14 +160,14 @@ export class ClipboardService {
                 const paymentItem = await this.queryPayments(text);
 
                 if (paymentItem) {
-                    if (this._settings?.generalNotifications.lightningAddress) {
+                    if (this._settings?.generalNotifications.lightningAddress && notify) {
                         await window.electron.showNotification(paymentItem.merchant, paymentItem.description ?? '');
                     }
                     return paymentItem;
                 }
             }
 
-            if (this._settings?.generalNotifications.lightningAddress) {
+            if (this._settings?.generalNotifications.lightningAddress && notify) {
                 await window.electron.showNotification('Lightning Address in Clipboard', 'Lightning Address Detected.');
             }
 
