@@ -4,7 +4,7 @@ windows:
 	dotnet build installers/windows/Branta.Wix --configuration Release --arch win-64
 
 install-deb:
-	sudo dpkg -i out/make/deb/x64/branta_0.4.0_amd64.deb
+	sudo dpkg -i out/make/deb/x64/branta_0.5.0_amd64.deb
 
 remove-deb:
 	sudo dpkg -r branta
@@ -12,4 +12,4 @@ remove-deb:
 snap:
 	snap remove branta
 	npm run snap
-	snap install dist/branta_0.4.0_amd64.snap --dangerous
+	snap install dist/branta_0.5.0_amd64.snap --dangerous
