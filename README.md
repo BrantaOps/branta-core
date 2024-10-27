@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-Guardrails for Bitcoin & Lightning
+Disclaimer: This is pre-release software and may contain bugs or incomplete features. Use at your own risk. Feedback and contributions are welcome!
 
 ## Download
 <a href="https://snapcraft.io/branta" target="_blank">
