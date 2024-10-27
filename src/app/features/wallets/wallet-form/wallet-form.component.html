@@ -21,7 +21,7 @@
                         @for (icon of iconOptions; track icon) {
                             <mat-option [value]="icon.value">
                                 <div class="icon-option">
-                                    <img [src]="'assets/wallet/icon/' + icon.icon" width="40" />
+                                    <img [src]="'assets/wallet/icon/' + icon.icon" style="max-width:40px; max-height:40px; width: 40px;" />
                                     <div>{{ icon.label }}</div>
                                 </div>
                             </mat-option>
