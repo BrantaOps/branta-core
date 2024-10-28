@@ -151,7 +151,7 @@ function multiSig(wallet: Wallet, address: string, account: number, i: number, b
 export function verifyAddress(wallets: Wallet[], address: string): AddressClipboardItem | null {
     var bip32 = BIP32Factory(ecc);
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 50; i++) {
         for (let j = 0; j < wallets.length; j++) {
             for (let k = 0; k <= MAX_ACCOUNT; k++) {
                 try {
