@@ -22,7 +22,6 @@ export class ClipboardService {
     private _settings: Settings;
 
     public static XPUB_REGEX = '^([xyYzZtuUvV]pub[1-9A-HJ-NP-Za-km-z]{79,108})$';
-    public static XPUB_OR_DESCRIPTOR_REGEX = /^([xyYzZtuUvV]pub[1-9A-HJ-NP-Za-km-z]{79,108}|xpub[a-zA-Z0-9]+|ypub[a-zA-Z0-9]+|zpub[a-zA-Z0-9]+)$/;
 
     addressRegExp = new RegExp('^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$');
     segwitAddressRegExp = new RegExp('^bc1[0-9a-zA-Z]{25,65}$');
