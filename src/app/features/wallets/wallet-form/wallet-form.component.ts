@@ -140,7 +140,7 @@ export class WalletFormComponent {
 
     getKeyForm(key: ExtendedPublicKey): FormGroup {
         return this.fb.group({
-            value: this.fb.control(key.value, [Validators.required, Validators.pattern(ClipboardService.XPUB_REGEX)], [this.xpubValidatorService.validate]),
+            value: this.fb.control(key.value, [Validators.required, Validators.pattern(ClipboardService.XPUB_OR_DESCRIPTOR_REGEX)], [this.xpubValidatorService.validate]),
         });
     }
 

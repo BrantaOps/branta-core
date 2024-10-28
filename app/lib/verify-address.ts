@@ -181,8 +181,14 @@ export function verifyAddress(wallets: Wallet[], address: string): AddressClipbo
 }
 
 export function verifyXpub(xpub: string): boolean {
+    const xpubRegex = /(xpub[a-zA-Z0-9]+|ypub[a-zA-Z0-9]+|zpub[a-zA-Z0-9]+)/;
     try {
         var bip32 = BIP32Factory(ecc);
+
+        const match = xpub.match(xpubRegex);
+        if (match) {
+          xpub = match[0];
+        }
 
         if (xpub.startsWith('zpub')) {
             xpub = new BIP84.fromZPub(xpub).zpub;
@@ -190,6 +196,7 @@ export function verifyXpub(xpub: string): boolean {
 
         bip32.fromBase58(xpub).derive(0).derive(0).publicKey;
 
+        console.log("RETURNING TRUE IN VERIFY XPUB");
         return true;
     } catch (error) {
         console.log(error);
