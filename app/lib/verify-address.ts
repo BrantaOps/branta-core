@@ -9,6 +9,8 @@ const BIP84 = require('bip84');
 
 bitcoin.initEccLib(ecc);
 
+const MAX_ACCOUNT = 1;
+
 function getPrefix(address: string) {
     if (address.startsWith('1')) {
         return '1';
@@ -35,7 +37,7 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
     if (wallet.policyType == PolicyType.SingleSig) {
         return [AddressType.PayToPublicKeyHash, AddressType.PayToWitnessPublicKeyHash, AddressType.PayToTapRoot]
             .map((type) => {
-                var address = getSingleSigAddress(wallet, i, type, bip32);
+                var address = getSingleSigAddress(wallet, 0, i, type, bip32);
                 var prefix = getPrefix(address);
 
                 return {
@@ -49,7 +51,7 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
     } else {
         return [AddressType.PayToWitnessPublicKeyHash, AddressType.PayToScriptHash]
             .map((type) => {
-                var address = getMultiSigAddress(wallet, i, type, bip32);
+                var address = getMultiSigAddress(wallet, 0, i, type, bip32);
                 var prefix = getPrefix(address);
 
                 return {
@@ -63,8 +65,8 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
     }
 }
 
-function getSingleSigAddress(wallet: Wallet, i: number, type: AddressType, bip32: any): string {
-    var pubkey = toHex(wallet.keys[0], i, bip32);
+function getSingleSigAddress(wallet: Wallet, account: number, i: number, type: AddressType, bip32: any): string {
+    var pubkey = toHex(wallet.keys[0], account, i, bip32);
 
     if (type == AddressType.PayToPublicKeyHash) {
         return bitcoin.payments.p2pkh({ pubkey })?.address;
@@ -80,9 +82,9 @@ function getSingleSigAddress(wallet: Wallet, i: number, type: AddressType, bip32
     throw Error("Single sig address type not found.");
 }
 
-function getMultiSigAddress(wallet: Wallet, i: number, type: AddressType, bip32: any): string {
+function getMultiSigAddress(wallet: Wallet, account: number, i: number, type: AddressType, bip32: any): string {
     var pubkeys = wallet.keys
-        .map((key) => toHex(key, i, bip32))
+        .map((key) => toHex(key, account, i, bip32))
         .map((hex) => Buffer.from(hex, 'hex'))
         .sort((a, b) => {
             if (a.equals(b)) return 0;
@@ -107,10 +109,10 @@ function getMultiSigAddress(wallet: Wallet, i: number, type: AddressType, bip32:
     throw Error("Multi sig address type not found.");
 }
 
-function singleSig(wallet: Wallet, address: string, i: number, bip32: any): AddressClipboardItem | null {
-    if (getSingleSigAddress(wallet, i, AddressType.PayToPublicKeyHash, bip32) != address &&
-        getSingleSigAddress(wallet, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address &&
-        getSingleSigAddress(wallet, i, AddressType.PayToTapRoot, bip32) != address) {
+function singleSig(wallet: Wallet, address: string, account: number, i: number, bip32: any): AddressClipboardItem | null {
+    if (getSingleSigAddress(wallet, account, i, AddressType.PayToPublicKeyHash, bip32) != address &&
+        getSingleSigAddress(wallet, account, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address &&
+        getSingleSigAddress(wallet, account, i, AddressType.PayToTapRoot, bip32) != address) {
         return null;
     }
 
@@ -119,24 +121,20 @@ function singleSig(wallet: Wallet, address: string, i: number, bip32: any): Addr
         value: address,
         address: address,
         wallet: wallet,
-        derivationPath: `0/${i}`,
+        derivationPath: `${account}/${i}`,
         private: false
     };
 }
 
-function toHex(key: ExtendedPublicKey, i: number, bip32: any) {
+function toHex(key: ExtendedPublicKey, account: number, i: number, bip32: any) {
     let pubKey = key.value.startsWith('zpub') ? new BIP84.fromZPub(key.value).zpub : key.value;
 
-    if (!key.derivationPath) {
-        key.derivationPath = '0/0';
-    }
-
-    return bip32.fromBase58(pubKey).derivePath(key.derivationPath.replace(/\d+$/, `${i}`)).publicKey;
+    return bip32.fromBase58(pubKey).derivePath(`${account}/${i}`).publicKey;
 }
 
-function multiSig(wallet: Wallet, address: string, i: number, bip32: any): AddressClipboardItem | null {
-    if (getMultiSigAddress(wallet, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address &&
-        getMultiSigAddress(wallet, i, AddressType.PayToScriptHash, bip32) != address) {
+function multiSig(wallet: Wallet, address: string, account: number, i: number, bip32: any): AddressClipboardItem | null {
+    if (getMultiSigAddress(wallet, account, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address &&
+        getMultiSigAddress(wallet, account, i, AddressType.PayToScriptHash, bip32) != address) {
         return null;
     }
 
@@ -145,7 +143,7 @@ function multiSig(wallet: Wallet, address: string, i: number, bip32: any): Addre
         value: address,
         address: address,
         wallet: wallet,
-        derivationPath: `0/${i}`,
+        derivationPath: `${account}/${i}`,
         private: false
     };
 }
@@ -153,26 +151,28 @@ function multiSig(wallet: Wallet, address: string, i: number, bip32: any): Addre
 export function verifyAddress(wallets: Wallet[], address: string): AddressClipboardItem | null {
     var bip32 = BIP32Factory(ecc);
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 4; i++) {
         for (let j = 0; j < wallets.length; j++) {
-            try {
-                const wallet = wallets[j];
+            for (let k = 0; k <= MAX_ACCOUNT; k++) {
+                try {
+                    const wallet = wallets[j];
 
-                if (wallet.policyType == 'Multi Sig') {
-                    var result = multiSig(wallet, address, i, bip32);
+                    if (wallet.policyType == 'Multi Sig') {
+                        var result = multiSig(wallet, address, k, i, bip32);
 
-                    if (result) {
-                        return result;
+                        if (result) {
+                            return result;
+                        }
+                    } else {
+                        var result = singleSig(wallet, address, k, i, bip32);
+
+                        if (result) {
+                            return result;
+                        }
                     }
-                } else {
-                    var result = singleSig(wallet, address, i, bip32);
-
-                    if (result) {
-                        return result;
-                    }
+                } catch (error) {
+                    console.log("verifyAddress Error: " + error)
                 }
-            } catch (error) {
-                console.log("verifyAddress Error: " + error)
             }
         }
     }
