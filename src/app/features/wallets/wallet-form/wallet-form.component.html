@@ -95,12 +95,8 @@
                     @for (address of addresses; track address) {
                         <div class="address">
                             <div class="value">
-                                <div class="prefix">
-                                    <i>{{ address.prefix }}</i>
-                                </div>
-                                <div class="remainder">
-                                    <i>{{ address.remainder }}</i>
-                                </div>
+                                <span class="prefix">{{ address.prefix }}</span>
+                                <span class="remainder">{{ address.remainder }}</span>
                             </div>
                         </div>
                     }
