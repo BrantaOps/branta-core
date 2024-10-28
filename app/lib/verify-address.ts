@@ -72,8 +72,8 @@ function getSingleSigAddress(wallet: Wallet, i: number, type: AddressType, bip32
         return bitcoin.payments.p2wpkh({ pubkey })?.address;
     } else if (type == AddressType.PayToTapRoot) {
         return bitcoin.payments.p2tr({
-          internalPubkey: pubkey.slice(1),
-          network: bitcoin.networks.bitcoin
+            internalPubkey: pubkey.slice(1),
+            network: bitcoin.networks.bitcoin
         })?.address;
     }
 
@@ -181,14 +181,8 @@ export function verifyAddress(wallets: Wallet[], address: string): AddressClipbo
 }
 
 export function verifyXpub(xpub: string): boolean {
-    const xpubRegex = /(xpub[a-zA-Z0-9]+|ypub[a-zA-Z0-9]+|zpub[a-zA-Z0-9]+)/;
     try {
         var bip32 = BIP32Factory(ecc);
-
-        const match = xpub.match(xpubRegex);
-        if (match) {
-          xpub = match[0];
-        }
 
         if (xpub.startsWith('zpub')) {
             xpub = new BIP84.fromZPub(xpub).zpub;
@@ -196,7 +190,6 @@ export function verifyXpub(xpub: string): boolean {
 
         bip32.fromBase58(xpub).derive(0).derive(0).publicKey;
 
-        console.log("RETURNING TRUE IN VERIFY XPUB");
         return true;
     } catch (error) {
         console.log(error);

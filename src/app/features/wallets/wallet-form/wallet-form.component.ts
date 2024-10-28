@@ -11,13 +11,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Address } from '../../../shared/models/address';
-import { Icon } from '../../../shared/models/icon';
+import { Icon, IconOption, iconOptions } from '../../../shared/models/icon';
 import { ExtendedPublicKey, PolicyType, Wallet } from '../../../shared/models/wallet.model';
 import { ClipboardService } from '../../../shared/services/clipboard.service';
 import { WalletService } from '../../../shared/services/wallet.service';
 import { XpubValidatorService } from '../../../shared/services/xpub-validator.service';
-import { iconOptions } from '../../../shared/models/icon';
-import { IconOption } from '../../../shared/models/icon';
+import { DescriptorFormDialogComponent, DescriptorWallet } from './descriptor-form-dialog/descriptor-form-dialog.component';
 
 interface AddressConfirmed {
     address: string;
@@ -140,7 +139,7 @@ export class WalletFormComponent {
 
     getKeyForm(key: ExtendedPublicKey): FormGroup {
         return this.fb.group({
-            value: this.fb.control(key.value, [Validators.required, Validators.pattern(ClipboardService.XPUB_OR_DESCRIPTOR_REGEX)], [this.xpubValidatorService.validate]),
+            value: this.fb.control(key.value, [Validators.required, Validators.pattern(ClipboardService.XPUB_REGEX)], [this.xpubValidatorService.validate]),
         });
     }
 
@@ -207,6 +206,33 @@ export class WalletFormComponent {
 
     onIconSelectionChange(event: MatSelectChange) {
         this.selectedIcon = this.iconOptions.find((option: IconOption) => option.value == event.value);
+    }
+
+    onClickFormDescriptor(event: MouseEvent) {
+        event.preventDefault();
+
+        const dialogRef = this.dialog.open(DescriptorFormDialogComponent, {
+            height: 'auto',
+            width: '600px'
+        });
+
+        dialogRef.afterClosed().subscribe((result: DescriptorWallet) => {
+            let n = result.keys.length ?? 1;
+
+            if (n > 1) {
+                this.keysFormGroup.get('policyType')?.setValue(PolicyType.MultiSig);
+                this.keysFormGroup.get('m')?.setValue(result.m);
+                this.keysFormGroup.get('n')?.setValue(n);
+            } else if (n == 1) {
+                this.keysFormGroup.get('policyType')?.setValue(PolicyType.SingleSig);
+            }
+
+            const keysArray = this.keysFormGroup.get('keys') as FormArray;
+
+            for (let i = 0; i < result.keys.length; i++) {
+                keysArray.at(i).get('value')?.setValue(result.keys[i].value);
+            }
+        });
     }
 
     private get wallet(): Wallet {
