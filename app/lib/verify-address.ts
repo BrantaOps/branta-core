@@ -7,6 +7,8 @@ const ecc = require('tiny-secp256k1');
 const { BIP32Factory } = require('bip32');
 const BIP84 = require('bip84');
 
+bitcoin.initEccLib(ecc);
+
 function getPrefix(address: string) {
     if (address.startsWith('1')) {
         return '1';
@@ -31,7 +33,7 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
     var bip32 = BIP32Factory(ecc);
 
     if (wallet.policyType == PolicyType.SingleSig) {
-        return [AddressType.PayToPublicKeyHash, AddressType.PayToWitnessPublicKeyHash]
+        return [AddressType.PayToPublicKeyHash, AddressType.PayToWitnessPublicKeyHash, AddressType.PayToTapRoot]
             .map((type) => {
                 var address = getSingleSigAddress(wallet, i, type, bip32);
                 var prefix = getPrefix(address);
@@ -68,6 +70,11 @@ function getSingleSigAddress(wallet: Wallet, i: number, type: AddressType, bip32
         return bitcoin.payments.p2pkh({ pubkey })?.address;
     } else if (type == AddressType.PayToWitnessPublicKeyHash) {
         return bitcoin.payments.p2wpkh({ pubkey })?.address;
+    } else if (type == AddressType.PayToTapRoot) {
+        return bitcoin.payments.p2tr({
+          internalPubkey: pubkey.slice(1),
+          network: bitcoin.networks.bitcoin
+        })?.address;
     }
 
     throw Error("Single sig address type not found.");
@@ -102,7 +109,8 @@ function getMultiSigAddress(wallet: Wallet, i: number, type: AddressType, bip32:
 
 function singleSig(wallet: Wallet, address: string, i: number, bip32: any): AddressClipboardItem | null {
     if (getSingleSigAddress(wallet, i, AddressType.PayToPublicKeyHash, bip32) != address &&
-        getSingleSigAddress(wallet, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address) {
+        getSingleSigAddress(wallet, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address &&
+        getSingleSigAddress(wallet, i, AddressType.PayToTapRoot, bip32) != address) {
         return null;
     }
 

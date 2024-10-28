@@ -1,7 +1,8 @@
 export enum AddressType {
     PayToPublicKeyHash = 'Legacy',
     PayToWitnessPublicKeyHash = 'Segwit',
-    PayToScriptHash = 'P2SH'
+    PayToScriptHash = 'P2SH',
+    PayToTapRoot = 'P2TR'
 }
 
 export interface Address {
