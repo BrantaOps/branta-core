@@ -131,6 +131,13 @@
     }
 }
 
+.options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
 .hide-header {
     ::ng-deep .mat-mdc-tab-header {
         display: none !important;

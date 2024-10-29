@@ -74,8 +74,8 @@ function getSingleSigAddress(wallet: Wallet, account: number, i: number, type: A
         return bitcoin.payments.p2wpkh({ pubkey })?.address;
     } else if (type == AddressType.PayToTapRoot) {
         return bitcoin.payments.p2tr({
-          internalPubkey: pubkey.slice(1),
-          network: bitcoin.networks.bitcoin
+            internalPubkey: pubkey.slice(1),
+            network: bitcoin.networks.bitcoin
         })?.address;
     }
 

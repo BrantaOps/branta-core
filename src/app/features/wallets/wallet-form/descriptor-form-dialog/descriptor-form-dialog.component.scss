@@ -1,0 +1,15 @@
+@import '../../../../../styles.scss';
+
+.form {
+    .form-field {
+        width: 100%;
+
+        .mat-mdc-input-element {
+            height: 150px;
+        }
+    }
+
+    .error {
+        color: $error-color;
+    }
+}

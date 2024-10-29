@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Wallet Descriptor</h2>
+<mat-dialog-content>
+    <p>Paste in a Wallet Descriptor and click save. Branta will automatically extract your wallet setup.</p>
+    <form class="form" [formGroup]="descriptorForm">
+        <mat-form-field class="form-field">
+            <textarea matInput formControlName="descriptor" placeholder="Ex: pkh(Keystore1)"></textarea>
+        </mat-form-field>
+        <p class="error">{{ error }}</p>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button color="primary" (click)="onSave($event)">Save</button>
+</mat-dialog-actions>
