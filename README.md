@@ -8,7 +8,25 @@
 
 Disclaimer: This is pre-release software and may contain bugs or incomplete features. Use at your own risk. Feedback and contributions are welcome!
 
+Read more on our [documentation site.](https://docs.branta.pro/)
+
+## Feature Set
+- [X] Linux, Mac & Windows builds
+- [X] Instant Clipboard alerts for Bitcoin & Lightning
+- [X] Instant Clipboard alerts for NOSTR
+- [X] Optional clipboard history
+- [X] `P2TR` Wallets
+- [X] `P2WPKH` Wallets
+- [X] `P2WSH` Multisig Wallets
+- [X] Zero analytics
+- [X] Zero default network traffic
+- [X] Change & Receive account clipboard alerts
+- [ ] NOSTR preferences sync
+- [ ] BOLT 11 parsing
+- [ ] Mobile Support
+
 ## Download
+
 <a href="https://snapcraft.io/branta" target="_blank">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://snapcraft.io/static/images/badges/en/snap-store-black.svg">
