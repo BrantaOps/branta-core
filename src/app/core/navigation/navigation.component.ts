@@ -18,7 +18,7 @@ export class NavigationComponent {
     constructor(private vaultService: VaultService, private ngZone: NgZone, private router: Router) {
         this.vaultService.vaults.pipe(debounceTime(200)).subscribe((vaults) => {
             this.ngZone.run(() => {
-                let displayVaults = vaults.length > 0;
+                const displayVaults = vaults.length > 0;
 
                 if (this.displayVaults == true && displayVaults == false) {
                     this.router.navigate(['clipboard']);

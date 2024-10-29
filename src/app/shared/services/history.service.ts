@@ -28,7 +28,7 @@ export class HistoryService {
     }
 
     private async load(): Promise<void> {
-        var history = await window.electron.retrieveData('history') as ClipboardItem[];
+        const history = await window.electron.retrieveData('history') as ClipboardItem[];
 
         this._history = history;
         this.update();

@@ -32,9 +32,9 @@ export class DescriptorFormDialogComponent {
 
     onSave(event: MouseEvent) {
         this.error = null;
-        let descriptor = this.descriptorForm.getRawValue().descriptor;
+        const descriptor = this.descriptorForm.getRawValue().descriptor;
 
-        let result = this.parseDescriptor(descriptor);
+        const result = this.parseDescriptor(descriptor);
 
         if (result == null) {
             this.error = 'Error: Unable to parse descriptor.';
@@ -45,14 +45,14 @@ export class DescriptorFormDialogComponent {
     }
 
     private parseDescriptor(descriptor: string): DescriptorWallet | null {
-        let keys = descriptor.match(/([xXyYzZtuUvV]pub[1-9A-HJ-NP-Za-km-z]{79,108})/g);
+        const keys = descriptor.match(/([xXyYzZtuUvV]pub[1-9A-HJ-NP-Za-km-z]{79,108})/g);
 
         if (!keys) {
             return null;
         }
 
-        let mMatch = descriptor.match(/sortedmulti\((\d+),/);
-        let m = mMatch ? parseInt(mMatch[1], 10) : null;
+        const mMatch = descriptor.match(/sortedmulti\((\d+),/);
+        const m = mMatch ? parseInt(mMatch[1], 10) : null;
 
         if ((keys.length > 1 && mMatch == null) || (m != null && keys.length < m)) {
             return null;

@@ -77,7 +77,7 @@ export class ClipboardService {
         }
 
         if (this.isBitcoinAddress(text)) {
-            var vault = await window.electron.verifyAddress(this._vaults, text);
+            const vault = await window.electron.verifyAddress(this._vaults, text);
 
             if (vault) {
                 if (this._settings?.generalNotifications.bitcoinAddress && notify) {
@@ -87,7 +87,7 @@ export class ClipboardService {
                 return vault;
             }
 
-            var wallet = await window.electron.verifyAddress(this._wallets, text);
+            const wallet = await window.electron.verifyAddress(this._wallets, text);
 
             // Found the users wallet
             if (wallet) {
@@ -187,7 +187,7 @@ export class ClipboardService {
 
     private async queryPayments(value: string): Promise<PaymentClipboardItem | null> {
         try {
-            var paymentClipboardItem = await lastValueFrom(this.serverService.getPayment(value));
+            const paymentClipboardItem = await lastValueFrom(this.serverService.getPayment(value));
 
             paymentClipboardItem.name = paymentClipboardItem.merchant;
             paymentClipboardItem.value = paymentClipboardItem.payment;
