@@ -28,6 +28,14 @@ function getPrefix(address: string) {
         return 'bc1p';
     }
 
+    if (address.startsWith('tb1q')) {
+        return 'tb1q';
+    }
+
+    if (address.startsWith('tb1p')) {
+        return 'tb1p';
+    }
+
     return '';
 }
 
@@ -35,9 +43,14 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
     var bip32 = BIP32Factory(ecc);
 
     if (wallet.policyType == PolicyType.SingleSig) {
-        return [AddressType.PayToPublicKeyHash, AddressType.PayToWitnessPublicKeyHash, AddressType.PayToTapRoot]
+        return [
+          AddressType.PayToPublicKeyHash,
+          AddressType.PayToWitnessPublicKeyHash,
+          AddressType.PayToTapRoot,
+        ]
             .map((type) => {
-                var address = getSingleSigAddress(wallet, 0, i, type, bip32);
+                var network = wallet.keys[0].value.startsWith('tpub') ? bitcoin.networks.testnet : bitcoin.networks.mainnet;
+                var address = getSingleSigAddress(wallet, 0, i, type, bip32, network);
                 var prefix = getPrefix(address);
 
                 return {
@@ -65,17 +78,29 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
     }
 }
 
-function getSingleSigAddress(wallet: Wallet, account: number, i: number, type: AddressType, bip32: any): string {
+function getSingleSigAddress(
+  wallet: Wallet,
+  account: number,
+  i: number,
+  type: AddressType,
+  bip32: any,
+  network: any = bitcoin.networks.bitcoin): string {
     var pubkey = toHex(wallet.keys[0], account, i, bip32);
 
     if (type == AddressType.PayToPublicKeyHash) {
-        return bitcoin.payments.p2pkh({ pubkey })?.address;
+        return bitcoin.payments.p2pkh(
+          { pubkey,
+            network: network
+          })?.address;
     } else if (type == AddressType.PayToWitnessPublicKeyHash) {
-        return bitcoin.payments.p2wpkh({ pubkey })?.address;
+        return bitcoin.payments.p2wpkh(
+          { pubkey,
+            network: network
+          })?.address;
     } else if (type == AddressType.PayToTapRoot) {
         return bitcoin.payments.p2tr({
             internalPubkey: pubkey.slice(1),
-            network: bitcoin.networks.bitcoin
+            network: network
         })?.address;
     }
 
@@ -129,7 +154,12 @@ function singleSig(wallet: Wallet, address: string, account: number, i: number, 
 function toHex(key: ExtendedPublicKey, account: number, i: number, bip32: any) {
     let pubKey = key.value.startsWith('zpub') ? new BIP84.fromZPub(key.value).zpub : key.value;
 
-    return bip32.fromBase58(pubKey).derivePath(`${account}/${i}`).publicKey;
+    if (key.value.startsWith('tpub')) {
+        return bip32.fromBase58(pubKey, bitcoin.networks.testnet).derivePath(`${account}/${i}`).publicKey;
+    }
+    else {
+        return bip32.fromBase58(pubKey).derivePath(`${account}/${i}`).publicKey;
+    }
 }
 
 function multiSig(wallet: Wallet, address: string, account: number, i: number, bip32: any): AddressClipboardItem | null {
@@ -188,7 +218,12 @@ export function verifyXpub(xpub: string): boolean {
             xpub = new BIP84.fromZPub(xpub).zpub;
         }
 
-        bip32.fromBase58(xpub).derive(0).derive(0).publicKey;
+        if (xpub.startsWith('tpub')) {
+            bip32.fromBase58(xpub, bitcoin.networks.testnet).derive(0).derive(0).publicKey;
+        }
+        else {
+            bip32.fromBase58(xpub).derive(0).derive(0).publicKey;
+        }
 
         return true;
     } catch (error) {
