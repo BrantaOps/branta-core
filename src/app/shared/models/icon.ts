@@ -2,7 +2,8 @@ export enum Icon {
     Default = 0,
     Sparrow = 1,
     Bold = 2,
-    Trezor = 3
+    Trezor = 3,
+    Unchained = 4
 }
 
 export interface IconOption {
@@ -31,5 +32,10 @@ export var iconOptions: IconOption[] = [
         label: 'Trezor',
         icon: 'trezor_white.svg',
         value: Icon.Trezor
+    },
+    {
+        label: 'Unchained',
+        icon: 'unchained.png',
+        value: Icon.Unchained
     }
 ];
