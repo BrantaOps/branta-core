@@ -26,6 +26,7 @@ export class ClipboardService {
     addressRegExp = new RegExp('^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$');
     segwitAddressRegExp = new RegExp('^bc1[0-9a-zA-Z]{25,65}$');
     testnetAddressRegExp = new RegExp('^tb1[0-9a-zA-Z]{25,65}$');
+    testnetLegacyAddressRegExp = new RegExp('^[2mn][0-9a-zA-Z]{25,65}$');
     extendedKeyRegExp = new RegExp(ClipboardService.XPUB_REGEX);
     nostrPubKeyRegExp = new RegExp('^npub[0-9a-z]{58,65}$');
     nostrPrivateKeyRegExp = new RegExp('^nsec[0-9a-z]{58,65}$');
@@ -182,7 +183,7 @@ export class ClipboardService {
     }
 
     public isBitcoinAddress(text: string) {
-        return this.addressRegExp.test(text) || this.segwitAddressRegExp.test(text) || this.testnetAddressRegExp.test(text);
+        return this.addressRegExp.test(text) || this.segwitAddressRegExp.test(text) || this.testnetAddressRegExp.test(text) || this.testnetLegacyAddressRegExp.test(text);
     }
 
     private async queryPayments(value: string): Promise<PaymentClipboardItem | null> {
