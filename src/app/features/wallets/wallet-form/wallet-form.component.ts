@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Address } from '../../../shared/models/address';
 import { Icon, IconOption, iconOptions } from '../../../shared/models/icon';
@@ -68,6 +69,8 @@ export class WalletFormComponent {
     iconOptions = iconOptions;
     selectedIcon: any;
 
+    existingNames: string[] = [];
+
     constructor(
         private fb: FormBuilder,
         private walletService: WalletService,
@@ -81,10 +84,14 @@ export class WalletFormComponent {
             const walletId: number = params['walletId'];
             this.existingWallet = this.walletService.getById(walletId) ?? null;
 
+            this.walletService.wallets.subscribe((wallets: Wallet[]) => {
+                this.existingNames = wallets.map((wallet: Wallet) => wallet.name);
+            });
+
             this.selectedIcon = this.existingWallet ? iconOptions.find(option => option.value == this.existingWallet!.icon) || iconOptions[0] : iconOptions[0];
 
             this.nameFormGroup = this.fb.group({
-                name: this.fb.control(this.existingWallet?.name ?? '', Validators.required),
+                name: this.fb.control(this.existingWallet?.name ?? '', [Validators.required, this.uniqueNameValidator.bind(this)]),
                 icon: this.fb.control(this.selectedIcon.value)
             });
 
@@ -240,5 +247,10 @@ export class WalletFormComponent {
             ...this.nameFormGroup.getRawValue(),
             ...this.keysFormGroup.getRawValue()
         } as Wallet;
+    }
+
+    uniqueNameValidator(control: AbstractControl): ValidationErrors | null {
+        const isUnique = !this.existingNames.includes(control.value);
+        return isUnique ? null : { nameTaken: true };
     }
 }
