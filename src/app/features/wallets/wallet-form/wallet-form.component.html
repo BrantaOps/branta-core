@@ -8,6 +8,9 @@
                 <mat-form-field>
                     <mat-label>Name</mat-label>
                     <input matInput formControlName="name" />
+                    @if (nameFormGroup.get('name')?.hasError('nameTaken')) {
+                        <mat-error>Name must be unique.</mat-error>
+                    }
                 </mat-form-field>
                 <mat-form-field class="large">
                     <mat-label>Icon</mat-label>
