@@ -26,7 +26,7 @@ export class VaultService {
     }
 
     private async load(): Promise<void> {
-        var vaults = await window.electron.retrieveData('vault') as Vault[];
+        const vaults = await window.electron.retrieveData('vault') as Vault[];
 
         this._vaults = vaults;
         this.update();

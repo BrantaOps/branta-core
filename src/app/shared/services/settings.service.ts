@@ -31,7 +31,7 @@ export class SettingsService {
     }
 
     load(): void {
-        var settings = localStorage.getItem(this.SETTINGS_KEY);
+        const settings = localStorage.getItem(this.SETTINGS_KEY);
         const parsedSettings: Partial<Settings> = settings ? JSON.parse(settings) : {};
 
         this._settings = this.mergeSettings(this.defaultSettings, parsedSettings);

@@ -34,7 +34,7 @@ export class WalletService {
     }
 
     private async load(): Promise<void> {
-        var wallets = await window.electron.retrieveData('wallet') as Wallet[];
+        const wallets = await window.electron.retrieveData('wallet') as Wallet[];
 
         this._wallets = wallets;
         this.update();

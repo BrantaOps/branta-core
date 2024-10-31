@@ -15,3 +15,5 @@ jobs:
       run: npm run test
     - name: audit
       run: npm audit --audit-level=critical
+    - name: lint
+      run: npm run lint

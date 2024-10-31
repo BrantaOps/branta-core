@@ -78,7 +78,7 @@ export class WalletFormComponent {
         public clipboardService: ClipboardService,
     ) {
         this.route.queryParams.subscribe((params) => {
-            var walletId: number = params['walletId'];
+            const walletId: number = params['walletId'];
             this.existingWallet = this.walletService.getById(walletId) ?? null;
 
             this.selectedIcon = this.existingWallet ? iconOptions.find(option => option.value == this.existingWallet!.icon) || iconOptions[0] : iconOptions[0];
@@ -156,7 +156,7 @@ export class WalletFormComponent {
 
         this.clipboardTextSub = this.clipboardService.clipboardText.subscribe(async (text) => {
             if (this.clipboardService.isBitcoinAddress(text)) {
-                var wallet = await window.electron.verifyAddress([this.wallet], text);
+                const wallet = await window.electron.verifyAddress([this.wallet], text);
                 this.addressConfirmed = {
                     address: text,
                     isConfirmed: wallet != null
@@ -217,7 +217,7 @@ export class WalletFormComponent {
         });
 
         dialogRef.afterClosed().subscribe((result: DescriptorWallet) => {
-            let n = result.keys.length ?? 1;
+            const n = result.keys.length ?? 1;
 
             if (n > 1) {
                 this.keysFormGroup.get('policyType')?.setValue(PolicyType.MultiSig);

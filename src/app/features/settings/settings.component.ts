@@ -26,7 +26,7 @@ export class SettingsComponent {
         private historyService: HistoryService,
         private clipboardService: ClipboardService
     ) {
-        let settings = settingsService.get();
+        const settings = settingsService.get();
 
         this.formGroup = new FormGroup({
             checkoutMode: new FormControl(settings.checkoutMode),
