@@ -81,12 +81,7 @@ function getNetwork(wallet: Wallet) {
     return (wallet.keys[0].value.startsWith('tpub')) ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
 }
 
-function getSingleSigAddress(
-    wallet: Wallet,
-    account: number,
-    i: number,
-    type: AddressType,
-    bip32: any): string {
+function getSingleSigAddress(wallet: Wallet, account: number, i: number, type: AddressType, bip32: any): string {
     const network = getNetwork(wallet);
 
     const pubkey = toHex(wallet.keys[0], account, i, bip32);
