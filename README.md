@@ -21,6 +21,7 @@ Read more on our [documentation site.](https://docs.branta.pro/)
 - [X] Zero analytics
 - [X] Zero default network traffic
 - [X] Change & Receive account clipboard alerts
+- [ ] Testnet support
 - [ ] NOSTR preferences sync
 - [ ] BOLT 11 parsing
 - [ ] Mobile Support
