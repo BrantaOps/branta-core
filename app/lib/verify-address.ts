@@ -44,13 +44,12 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
 
     if (wallet.policyType == PolicyType.SingleSig) {
         return [
-          AddressType.PayToPublicKeyHash,
-          AddressType.PayToWitnessPublicKeyHash,
-          AddressType.PayToTapRoot,
+            AddressType.PayToPublicKeyHash,
+            AddressType.PayToWitnessPublicKeyHash,
+            AddressType.PayToTapRoot,
         ]
             .map((type) => {
-                var network = wallet.keys[0].value.startsWith('tpub') ? bitcoin.networks.testnet : bitcoin.networks.mainnet;
-                var address = getSingleSigAddress(wallet, 0, i, type, bip32, network);
+                var address = getSingleSigAddress(wallet, 0, i, type, bip32);
                 var prefix = getPrefix(address);
 
                 return {
@@ -78,29 +77,35 @@ export function getAllAddresses(wallet: Wallet, i: number): Address[] {
     }
 }
 
+function getNetwork(wallet: Wallet) {
+    return (wallet.keys[0].value.startsWith('tpub')) ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+}
+
 function getSingleSigAddress(
-  wallet: Wallet,
-  account: number,
-  i: number,
-  type: AddressType,
-  bip32: any,
-  network: any = bitcoin.networks.bitcoin): string {
-    var pubkey = toHex(wallet.keys[0], account, i, bip32);
+    wallet: Wallet,
+    account: number,
+    i: number,
+    type: AddressType,
+    bip32: any): string {
+    const network = getNetwork(wallet);
+
+    const pubkey = toHex(wallet.keys[0], account, i, bip32);
 
     if (type == AddressType.PayToPublicKeyHash) {
         return bitcoin.payments.p2pkh(
-          { pubkey,
-            network: network
-          })?.address;
+            {
+                pubkey,
+                network
+            })?.address;
     } else if (type == AddressType.PayToWitnessPublicKeyHash) {
-        return bitcoin.payments.p2wpkh(
-          { pubkey,
-            network: network
-          })?.address;
+        return bitcoin.payments.p2wpkh({
+            pubkey,
+            network
+        })?.address;
     } else if (type == AddressType.PayToTapRoot) {
         return bitcoin.payments.p2tr({
             internalPubkey: pubkey.slice(1),
-            network: network
+            network
         })?.address;
     }
 
@@ -108,6 +113,8 @@ function getSingleSigAddress(
 }
 
 function getMultiSigAddress(wallet: Wallet, account: number, i: number, type: AddressType, bip32: any): string {
+    const network = getNetwork(wallet);
+
     var pubkeys = wallet.keys
         .map((key) => toHex(key, account, i, bip32))
         .map((hex) => Buffer.from(hex, 'hex'))
@@ -117,16 +124,18 @@ function getMultiSigAddress(wallet: Wallet, account: number, i: number, type: Ad
         });
     if (type == AddressType.PayToWitnessPublicKeyHash) {
         var p2wsh = bitcoin.payments.p2wsh({
-            redeem: bitcoin.payments.p2ms({ m: wallet.m, pubkeys })
+            redeem: bitcoin.payments.p2ms({ m: wallet.m, pubkeys, network }),
+            network
         });
 
         return p2wsh.address;
     } else if (type == AddressType.PayToScriptHash) {
         const { output } = bitcoin.payments.p2ms({
             m: wallet.m,
-            pubkeys: pubkeys
+            pubkeys: pubkeys,
+            network
         });
-        const p2sh = bitcoin.payments.p2sh({ redeem: { output } });
+        const p2sh = bitcoin.payments.p2sh({ redeem: { output }, network });
 
         return p2sh.address;
     }
