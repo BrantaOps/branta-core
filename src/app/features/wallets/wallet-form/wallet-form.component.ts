@@ -69,7 +69,7 @@ export class WalletFormComponent {
     iconOptions = iconOptions;
     selectedIcon: any;
 
-    existingNames: string[] = [];
+    wallets: Wallet[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -85,7 +85,7 @@ export class WalletFormComponent {
             this.existingWallet = this.walletService.getById(walletId) ?? null;
 
             this.walletService.wallets.subscribe((wallets: Wallet[]) => {
-                this.existingNames = wallets.map((wallet: Wallet) => wallet.name);
+                this.wallets = wallets;
             });
 
             this.selectedIcon = this.existingWallet ? iconOptions.find(option => option.value == this.existingWallet!.icon) || iconOptions[0] : iconOptions[0];
@@ -106,25 +106,25 @@ export class WalletFormComponent {
                 addresses: this.fb.array([])
             });
 
+            this.keysFormGroup.get('policyType')?.valueChanges.subscribe((value) => {
+                if (value == PolicyType.SingleSig) {
+                    this.isMultiSig = false;
+                    this.keysFormGroup.get('m')?.setValue(1);
+                    this.keysFormGroup.get('n')?.setValue(1);
+                } else {
+                    this.isMultiSig = true;
+                    this.keysFormGroup.get('m')?.setValue(2);
+                    this.keysFormGroup.get('n')?.setValue(3);
+                }
+            });
+
+            this.keysFormGroup.get('n')?.valueChanges.subscribe((value) => {
+                this.updateKeysForm(value);
+            });
+
             if (!this.existingWallet) {
                 this.updateKeysForm(1);
             }
-        });
-
-        this.keysFormGroup.get('policyType')?.valueChanges.subscribe((value) => {
-            if (value == PolicyType.SingleSig) {
-                this.isMultiSig = false;
-                this.keysFormGroup.get('m')?.setValue(1);
-                this.keysFormGroup.get('n')?.setValue(1);
-            } else {
-                this.isMultiSig = true;
-                this.keysFormGroup.get('m')?.setValue(2);
-                this.keysFormGroup.get('n')?.setValue(3);
-            }
-        });
-
-        this.keysFormGroup.get('n')?.valueChanges.subscribe((value) => {
-            this.updateKeysForm(value);
         });
     }
 
@@ -250,7 +250,8 @@ export class WalletFormComponent {
     }
 
     uniqueNameValidator(control: AbstractControl): ValidationErrors | null {
-        const isUnique = !this.existingNames.includes(control.value);
+        const isUnique = this.wallets.find((wallet: Wallet) => wallet.name == control.value && wallet.id != this.existingWallet?.id) == null;
+
         return isUnique ? null : { nameTaken: true };
     }
 }

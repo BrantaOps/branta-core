@@ -1,7 +1,7 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Package Name="Branta"
              Manufacturer="Branta LLC"
-             Version="0.5.0"
+             Version="0.6.0"
              UpgradeCode="4df52912-9d80-4a14-b98b-33a114a4f5ac">
         <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
