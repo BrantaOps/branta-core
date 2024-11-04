@@ -57,6 +57,10 @@
                 .subtitle {
                     font-size: 14px;
                     color: $text-gray;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 6px;
                 }
             }
         }
@@ -68,3 +72,24 @@
         color: $text-gray;
     }
 }
+
+.small-input {
+    width: 70px;
+
+    ::ng-deep .mdc-text-field {
+        padding: 2px;
+    }
+
+    ::ng-deep .mat-mdc-form-field-infix {
+        padding: 2px;
+    }
+
+    ::ng-deep .mat-mdc-form-field-infix {
+        min-height: 0px;
+    }
+
+    ::ng-deep .mat-mdc-form-field-bottom-align {
+        display: none;
+    }
+}
+

@@ -14,11 +14,18 @@
                 </div>
                 <div class="details">
                     <div class="title">{{ wallet.name }}</div>
-                    @if (wallet.policyType === PolicyType.MultiSig) {
-                        <div class="subtitle">{{ wallet.m }} of {{ wallet.n }} Multi Sig</div>
-                    } @else {
-                        <div class="subtitle">Single Sig</div>
-                    }
+                    <div class="subtitle">
+                        @if (wallet.policyType === PolicyType.MultiSig) {
+                            <div>{{ wallet.m }} of {{ wallet.n }} Multi Sig</div>
+                        } @else {
+                            <div>Single Sig</div>
+                        }
+                        <div style="font-weight: bold">|</div>
+                        <mat-form-field class="small-input">
+                            <input matInput type="number" min="10" max="2147483648" [value]="wallet.indexLimit ?? 50" type="number" (change)="onChangeIndexLimit($event, wallet)"/>
+                        </mat-form-field>
+                        <div>Addresses</div>
+                    </div>
                 </div>
                 <div>
                     <button mat-icon-button (click)="editWallet(wallet.id)">
