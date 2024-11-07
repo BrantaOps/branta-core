@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-expandable-text',
@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
     templateUrl: './expandable-text.component.html',
     styleUrl: './expandable-text.component.scss'
 })
-export class ExpandableTextComponent {
+export class ExpandableTextComponent implements OnInit {
     @Input() text: string | null;
 
     isLarge: boolean = false;
