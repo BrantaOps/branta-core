@@ -185,11 +185,11 @@ function multiSig(wallet: Wallet, address: string, account: number, i: number, b
 export function verifyAddress(wallets: Wallet[], address: string): AddressClipboardItem | null {
     var bip32 = BIP32Factory(ecc);
 
-    for (let i = 0; i < 50; i++) {
-        for (let j = 0; j < wallets.length; j++) {
+    for (let j = 0; j < wallets.length; j++) {
+        const wallet = wallets[j];
+        for (let i = 0; i < (wallet.indexLimit ?? 50); i++) {
             for (let k = 0; k <= MAX_ACCOUNT; k++) {
                 try {
-                    const wallet = wallets[j];
 
                     if (wallet.policyType == 'Multi Sig') {
                         var result = multiSig(wallet, address, k, i, bip32);

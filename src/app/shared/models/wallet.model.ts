@@ -8,6 +8,7 @@ export interface Wallet {
     m: number;
     n: number;
     keys: ExtendedPublicKey[];
+    indexLimit?: number | null;
 }
 
 export interface ExtendedPublicKey {
