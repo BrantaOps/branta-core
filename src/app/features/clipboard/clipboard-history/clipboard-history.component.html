@@ -3,7 +3,25 @@
     <div class="content">
         @for (item of history; track item) {
             <div class="item">
-                <div class="text">{{ item.value }}</div>
+                <div class="details">
+                    <div class="text">
+                        <app-expandable-text [text]="item.value" />
+                    </div>
+                    @if (isAddressClipboardItem(item) && item.wallet) {
+                        <div class="wallet-details">
+                            <div class="type">Wallet:</div>
+                            <img [src]="'assets/wallet/icon/' + getIcon(item.wallet).icon" height="20" />
+                            <div class="name">{{ item.wallet.name }}</div>
+                        </div>
+                    } @else if (isAddressClipboardItem(item) && !item.wallet) {
+                        <div class="secondary">No wallet found.</div>
+                    } @else if (isPaymentClipboardItem(item)) {
+                        <div class="wallet-details">
+                            <div class="type">Merchant:</div>
+                            <div class="name">{{ item.merchant }}</div>
+                        </div>
+                    }
+                </div>
                 <button mat-icon-button (click)="onCopyClipboard(item.value)" [disabled]="item.value == clipboardContent">
                     <mat-icon>content_copy</mat-icon>
                 </button>

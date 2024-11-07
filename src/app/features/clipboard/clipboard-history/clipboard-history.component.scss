@@ -34,6 +34,24 @@
             border-bottom: 1px solid #444;
             margin-bottom: 12px;
             word-break: break-all;
+
+            .details {
+                padding-bottom: 5px;
+
+                .text {
+                    padding-bottom: 10px;
+                }
+
+                .wallet-details {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .type {
+                    color: $text-gray;
+                }
+            }
         }
 
         .default {
@@ -44,4 +62,8 @@
             color: $text-gray;
         }
     }
+}
+
+.secondary {
+    color: $text-gray;
 }

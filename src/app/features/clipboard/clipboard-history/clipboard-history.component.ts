@@ -1,20 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ClipboardItem } from '../../../shared/models/clipboard-item';
+import { ExpandableTextComponent } from '../../../shared/components/expandable-text/expandable-text.component';
+import { AddressClipboardItem, ClipboardItem, PaymentClipboardItem } from '../../../shared/models/clipboard-item';
+import { getIcon } from '../../../shared/models/wallet.model';
 
 @Component({
     selector: 'app-clipboard-history',
     standalone: true,
-    imports: [MatButtonModule, MatIconModule],
+    imports: [CommonModule, MatButtonModule, MatIconModule, ExpandableTextComponent],
     templateUrl: './clipboard-history.component.html',
     styleUrl: './clipboard-history.component.scss'
 })
 export class ClipboardHistoryComponent {
-    @Input() history: ClipboardItem[];
+    @Input() history: (ClipboardItem | AddressClipboardItem | PaymentClipboardItem)[];
     @Input() clipboardContent: string | null | undefined;
+
+    getIcon = getIcon;
 
     onCopyClipboard(text: string | null) {
         (window as any).electron.clipboard.writeText(text);
+    }
+
+    isAddressClipboardItem(item: ClipboardItem): item is AddressClipboardItem {
+        return 'address' in item && 'wallet' in item && 'derivationPath' in item;
+    }
+
+    isPaymentClipboardItem(item: ClipboardItem): item is PaymentClipboardItem {
+        return 'payment' in item && 'merchant' in item && 'description' in item;
     }
 }
