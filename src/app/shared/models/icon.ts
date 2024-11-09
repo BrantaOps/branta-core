@@ -7,6 +7,7 @@ export enum Icon {
     Purple = 5,
     Teal = 6,
     Rust = 7,
+    Blockstream = 8,
 }
 
 export interface IconOption {
@@ -42,6 +43,11 @@ export var iconOptions: IconOption[] = [
         value: Icon.Unchained
     },
     {
+        label: 'Blockstream',
+        icon: 'blockstream.svg',
+        value: Icon.Blockstream
+    },
+    {
         label: 'Purple',
         icon: 'purple.svg',
         value: Icon.Purple
@@ -55,5 +61,5 @@ export var iconOptions: IconOption[] = [
         label: 'Rust',
         icon: 'rust.svg',
         value: Icon.Rust
-    }
+    },
 ];
