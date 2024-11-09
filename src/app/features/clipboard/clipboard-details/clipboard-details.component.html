@@ -48,6 +48,23 @@
                 <div class="unexpected">
                     <button mat-button color="accent" (click)="onShareFeedback()">Unexpected?</button>
                 </div>
+            } @else if (isBolt11ClipboardItem(clipboardItem)) {
+                <div class="item">
+                    <div class="title">Value:</div>
+                    <div class="value">{{ clipboardItem.value }}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Amount:</div>
+                    <div class="value">{{ clipboardItem.amount }} SATS</div>
+                </div>
+                <div class="item">
+                    <div class="title">Description:</div>
+                    <div class="value">{{ clipboardItem.description }}</div>
+                </div>
+                <div class="item">
+                    <div class="title">Expiry:</div>
+                    <div class="value">{{ clipboardItem.expiry }}</div>
+                </div>
             } @else {
                 <div class="value" *ngIf="!clipboardItem.private">{{ clipboardItem.value }}</div>
             }
