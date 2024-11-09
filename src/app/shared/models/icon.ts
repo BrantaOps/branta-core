@@ -4,10 +4,10 @@ export enum Icon {
     Bold = 2,
     Trezor = 3,
     Unchained = 4,
-    Blockstream = 5,
-    Purple = 6,
-    Teal = 7,
-    Rust = 8,
+    Purple = 5,
+    Teal = 6,
+    Rust = 7,
+    Blockstream = 8,
 }
 
 export interface IconOption {
