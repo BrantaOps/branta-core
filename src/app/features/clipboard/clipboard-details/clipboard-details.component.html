@@ -51,7 +51,7 @@
             } @else if (isBolt11ClipboardItem(clipboardItem)) {
                 <div class="item">
                     <div class="title">Value:</div>
-                    <div class="value">{{ clipboardItem.value }}</div>
+                    <app-expandable-text class="value" [text]="clipboardItem.value" />
                 </div>
                 <div class="item">
                     <div class="title">Amount:</div>

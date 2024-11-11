@@ -1,4 +1,4 @@
-import { LightningDetails } from "./lightning";
+import { Bolt11Details } from "./lightning";
 import { Wallet } from "./wallet.model";
 
 export interface ClipboardItem {
@@ -19,5 +19,5 @@ export interface PaymentClipboardItem extends ClipboardItem {
     description: string | null;
 }
 
-export interface Bolt11ClipboardItem extends ClipboardItem, LightningDetails {
+export interface Bolt11ClipboardItem extends ClipboardItem, Bolt11Details {
 }

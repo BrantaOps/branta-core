@@ -7,6 +7,7 @@ import { HistoryService } from '../../shared/services/history.service';
 import { SettingsService } from '../../shared/services/settings.service';
 import { ClipboardDetailsComponent } from './clipboard-details/clipboard-details.component';
 import { ClipboardHistoryComponent } from './clipboard-history/clipboard-history.component';
+import { BaseClipboardComponent } from './base-clipboard';
 
 @Component({
     selector: 'app-clipboard',
