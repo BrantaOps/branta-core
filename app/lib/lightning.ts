@@ -1,8 +1,8 @@
-import { LightningDetails } from "../../src/app/shared/models/lightning";
+import { Bolt11Details } from "../../src/app/shared/models/lightning";
 
 const bolt11 = require('bolt11');
 
-export function decodeLightningPayment(payment: string): LightningDetails | null {
+export function decodeLightningPayment(payment: string): Bolt11Details | null {
     let data = bolt11.decode(payment);
 
     if (!data) {
