@@ -91,6 +91,10 @@ function getIcon(file: string) {
 function createWindow() {
     const icon = getIcon('icon.png');
 
+    if (process.platform === 'darwin') {
+        app.dock.hide();
+    }
+
     mainWindow = new BrowserWindow({
         title: 'Branta',
         width: 700,
