@@ -1,5 +1,6 @@
 import { Address } from './app/shared/models/address';
 import { AddressClipboardItem } from './app/shared/models/clipboard-item';
+import { Bolt11Details } from './app/shared/models/lightning';
 import { Vault } from './app/shared/models/vault.model';
 import { Wallet } from './app/shared/models/wallet.model';
 
@@ -16,8 +17,10 @@ declare global {
             openUrl: (url: string) => void;
             onVaultCreated: (callback: (vault: Vault) => void) => void;
             getAllAddresses: (wallet: Wallet, i: number) => Promise<Address[]>;
+            decodeLightning: (payment: string) => Promise<Bolt11Details>;
         };
     }
 }
 
-export {};
+export { };
+

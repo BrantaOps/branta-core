@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, lastValueFrom } from 'rxjs';
-import { AddressClipboardItem, ClipboardItem, PaymentClipboardItem } from '../models/clipboard-item';
+import { AddressClipboardItem, Bolt11ClipboardItem, ClipboardItem, PaymentClipboardItem } from '../models/clipboard-item';
 import { Settings } from '../models/settings';
 import { Vault } from '../models/vault.model';
 import { Wallet } from '../models/wallet.model';
@@ -157,6 +157,8 @@ export class ClipboardService {
         }
 
         if (this.lightningAddressRegExp.test(text)) {
+            const result = await window.electron.decodeLightning(text);
+
             if (this._settings?.checkoutMode) {
                 const paymentItem = await this.queryPayments(text);
 
@@ -175,8 +177,9 @@ export class ClipboardService {
             return {
                 name: 'Lightning Address',
                 value: text,
-                private: false
-            };
+                private: false,
+                ...result
+            } as Bolt11ClipboardItem;
         }
 
         return null;

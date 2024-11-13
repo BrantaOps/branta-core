@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ExpandableTextComponent } from '../../../shared/components/expandable-text/expandable-text.component';
 import { AddressClipboardItem, ClipboardItem, PaymentClipboardItem } from '../../../shared/models/clipboard-item';
 import { getIcon } from '../../../shared/models/wallet.model';
+import { BaseClipboardComponent } from '../base-clipboard';
 
 @Component({
     selector: 'app-clipboard-history',
@@ -13,21 +14,11 @@ import { getIcon } from '../../../shared/models/wallet.model';
     templateUrl: './clipboard-history.component.html',
     styleUrl: './clipboard-history.component.scss'
 })
-export class ClipboardHistoryComponent {
+export class ClipboardHistoryComponent extends BaseClipboardComponent {
     @Input() history: (ClipboardItem | AddressClipboardItem | PaymentClipboardItem)[];
     @Input() clipboardContent: string | null | undefined;
 
-    getIcon = getIcon;
-
     onCopyClipboard(text: string | null) {
         (window as any).electron.clipboard.writeText(text);
-    }
-
-    isAddressClipboardItem(item: ClipboardItem): item is AddressClipboardItem {
-        return 'address' in item && 'wallet' in item && 'derivationPath' in item;
-    }
-
-    isPaymentClipboardItem(item: ClipboardItem): item is PaymentClipboardItem {
-        return 'payment' in item && 'merchant' in item && 'description' in item;
     }
 }
