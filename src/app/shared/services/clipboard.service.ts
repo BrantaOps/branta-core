@@ -30,7 +30,7 @@ export class ClipboardService {
     extendedKeyRegExp = new RegExp(ClipboardService.XPUB_REGEX);
     nostrPubKeyRegExp = new RegExp('^npub[0-9a-z]{58,65}$');
     nostrPrivateKeyRegExp = new RegExp('^nsec[0-9a-z]{58,65}$');
-    lightningAddressRegExp = new RegExp('lnbc[a-zA-z0-9]*');
+    lightningAddressRegExp = new RegExp('^lnbc[a-zA-z0-9]+$');
 
     constructor(
         private ngZone: NgZone,
