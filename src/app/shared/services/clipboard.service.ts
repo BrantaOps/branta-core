@@ -9,6 +9,16 @@ import { SettingsService } from './settings.service';
 import { VaultService } from './vault.service';
 import { WalletService } from './wallet.service';
 
+import { AddressRegExp,
+SegwitAddressRegExp,
+TestnetAddressRegExp,
+TestnetLegacyAddressRegExp,
+ExtendedKeyRegExp,
+NostrPubKeyRegExp,
+NostrPrivateKeyRegExp,
+LightningAddressRegExp
+ } from './regex'
+
 @Injectable({
     providedIn: 'root'
 })
@@ -22,15 +32,6 @@ export class ClipboardService {
     private _settings: Settings;
 
     public static XPUB_REGEX = '^([xyYzZtuUvV]pub[1-9A-HJ-NP-Za-km-z]{79,108})$';
-
-    addressRegExp = new RegExp('^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$');
-    segwitAddressRegExp = new RegExp('^bc1[0-9a-zA-Z]{25,65}$');
-    testnetAddressRegExp = new RegExp('^tb1[0-9a-zA-Z]{25,65}$');
-    testnetLegacyAddressRegExp = new RegExp('^[2mn][0-9a-zA-Z]{25,65}$');
-    extendedKeyRegExp = new RegExp(ClipboardService.XPUB_REGEX);
-    nostrPubKeyRegExp = new RegExp('^npub[0-9a-z]{58,65}$');
-    nostrPrivateKeyRegExp = new RegExp('^nsec[0-9a-z]{58,65}$');
-    lightningAddressRegExp = new RegExp('^lnbc[a-zA-z0-9]+$');
 
     constructor(
         private ngZone: NgZone,
@@ -123,7 +124,7 @@ export class ClipboardService {
             }
         }
 
-        if (this.extendedKeyRegExp.test(text)) {
+        if (ExtendedKeyRegExp.test(text)) {
             if (this._settings?.generalNotifications.bitcoinPublicKey && notify) {
                 await window.electron.showNotification('Bitcoin Extended Public Key in Clipboard.', 'Sharing can lead to loss of privacy.');
             }
@@ -134,7 +135,7 @@ export class ClipboardService {
             };
         }
 
-        if (this.nostrPubKeyRegExp.test(text)) {
+        if (NostrPubKeyRegExp.test(text)) {
             if (this._settings?.generalNotifications.nostrPublicKey && notify) {
                 await window.electron.showNotification('Nostr Public Key in Clipboard.', text);
             }
@@ -145,7 +146,7 @@ export class ClipboardService {
             };
         }
 
-        if (this.nostrPrivateKeyRegExp.test(text)) {
+        if (NostrPrivateKeyRegExp.test(text)) {
             if (this._settings?.generalNotifications.nostrPrivateKey && notify) {
                 await window.electron.showNotification('Nostr Private Key in Clipboard.', 'Never share this.');
             }
@@ -156,7 +157,7 @@ export class ClipboardService {
             };
         }
 
-        if (this.lightningAddressRegExp.test(text)) {
+        if (LightningAddressRegExp.test(text)) {
             const result = await window.electron.decodeLightning(text);
 
             if (this._settings?.checkoutMode) {
@@ -186,7 +187,7 @@ export class ClipboardService {
     }
 
     public isBitcoinAddress(text: string) {
-        return this.addressRegExp.test(text) || this.segwitAddressRegExp.test(text) || this.testnetAddressRegExp.test(text) || this.testnetLegacyAddressRegExp.test(text);
+        return AddressRegExp.test(text) || SegwitAddressRegExp.test(text) || TestnetAddressRegExp.test(text) || TestnetLegacyAddressRegExp.test(text);
     }
 
     private async queryPayments(value: string): Promise<PaymentClipboardItem | null> {
