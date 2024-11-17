@@ -1,5 +1,6 @@
 export interface Settings {
     checkoutMode: boolean;
+    queryBalances: boolean;
     developerMode: boolean;
     generalNotifications: GeneralNotifications;
     clipboardHistory: ClipboardHistory;

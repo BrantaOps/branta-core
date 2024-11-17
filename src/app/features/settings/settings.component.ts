@@ -19,6 +19,7 @@ export class SettingsComponent {
     formGroup: FormGroup;
 
     checkoutModeTooltip = 'Verify BTC/LN checkouts & invoices. Requires internet.';
+    queryBalancesTooltip = 'Query mempool for address balance. Requires internet.';
     developerModeTooltip = 'Only check this if you\'re a developer. Enables staging environment.';
 
     constructor(

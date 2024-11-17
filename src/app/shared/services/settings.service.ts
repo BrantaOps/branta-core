@@ -13,6 +13,7 @@ export class SettingsService {
 
     defaultSettings: Settings = {
         checkoutMode: false,
+        queryBalances: false,
         developerMode: false,
         clipboardHistory: {
             show: true

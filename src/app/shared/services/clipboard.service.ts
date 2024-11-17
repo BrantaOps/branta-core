@@ -9,6 +9,8 @@ import { SettingsService } from './settings.service';
 import { VaultService } from './vault.service';
 import { WalletService } from './wallet.service';
 
+import mempoolJS from '@mempool/mempool.js';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -109,9 +111,20 @@ export class ClipboardService {
                     }
                 }
 
+                if (this._settings?.queryBalances) {
+                    const balanceItem = await this.queryBalance(text);
+
+                    if (balanceItem && notify) {
+                        // TODO
+                        // await window.electron.showNotification(paymentItem.merchant, paymentItem.description ?? '');
+                        return balanceItem;
+                    }
+                }
+
                 if (this._settings?.generalNotifications.bitcoinAddress && notify) {
                     await window.electron.showNotification('New Bitcoin Address in Clipboard', 'Bitcoin Address Detected.');
                 }
+                
                 return {
                     name: 'Bitcoin Address',
                     value: text,
@@ -200,5 +213,10 @@ export class ClipboardService {
         } catch {
             return null;
         }
+    }
+
+    private async queryBalance(value: string): Promise<AddressClipboardItem | null> {
+      // TODO 
+      return null;
     }
 }

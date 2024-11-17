@@ -69,6 +69,7 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "@mempool/mempool.js": "^2.3.0",
     "auto-launch": "^5.0.6",
     "bip32": "^4.0.0",
     "bip84": "^0.2.9",

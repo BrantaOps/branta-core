@@ -11,6 +11,7 @@ export interface AddressClipboardItem extends ClipboardItem {
     address: string;
     wallet: Wallet | null;
     derivationPath: string | null;
+    balance: string | "-";
 }
 
 export interface PaymentClipboardItem extends ClipboardItem {
