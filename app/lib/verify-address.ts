@@ -11,7 +11,7 @@ bitcoin.initEccLib(ecc);
 
 const MAX_ACCOUNT = 1;
 
-function getPrefix(address: string) {
+export function getPrefix(address: string) {
     if (address.startsWith('1')) {
         return '1';
     }
