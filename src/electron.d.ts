@@ -18,6 +18,7 @@ declare global {
             onVaultCreated: (callback: (vault: Vault) => void) => void;
             getAllAddresses: (wallet: Wallet, i: number) => Promise<Address[]>;
             decodeLightning: (payment: string) => Promise<Bolt11Details>;
+            queryBalance(address: string | null): Promise<number>;
         };
     }
 }

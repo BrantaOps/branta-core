@@ -4,7 +4,7 @@ import * as url from 'url';
 import packageJson from '../package.json';
 import { loadRecords, saveRecords } from './lib/storage.js';
 import { processUrl } from './lib/vault.js';
-import { getAllAddresses, verifyAddress, verifyXpub } from './lib/verify-address.js';
+import { getAllAddresses, queryBalance, verifyAddress, verifyXpub } from './lib/verify-address.js';
 import { decodeLightningPayment } from './lib/lightning.js';
 
 if (process.platform != 'win32') {
@@ -174,6 +174,8 @@ function createWindow() {
     ipcMain.handle('get-all-addresses', async (_event, wallet, i) => getAllAddresses(wallet, i));
 
     ipcMain.handle('decode-lightning', async (_event, payment) => decodeLightningPayment(payment));
+
+    ipcMain.handle('query-balance', async (_event, address) => await queryBalance(address));
 
     mainWindow.on('closed', function() {
         mainWindow = null;

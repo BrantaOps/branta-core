@@ -16,5 +16,6 @@ contextBridge.exposeInMainWorld('electron', {
     openUrl: (url: string) => ipcRenderer.invoke('open-url', url),
     onVaultCreated: (callback: any) => ipcRenderer.on('vault-created', (_event: any, vault: Vault) => callback(vault)),
     getAllAddresses: (wallet: Wallet, i: number) => ipcRenderer.invoke('get-all-addresses', wallet, i),
-    decodeLightning: (payment: string) => ipcRenderer.invoke('decode-lightning', payment)
+    decodeLightning: (payment: string) => ipcRenderer.invoke('decode-lightning', payment),
+    queryBalance: (address: string) => ipcRenderer.invoke('query-balance', address)
 });

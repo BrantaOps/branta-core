@@ -87,6 +87,8 @@ export class ClipboardService {
                     await window.electron.showNotification('BTC address: ' + vault.wallet?.name, 'Derivation: ' + vault.derivationPath);
                 }
 
+                vault.balance = await this.queryBalance(text);
+
                 return vault;
             }
 
@@ -97,6 +99,8 @@ export class ClipboardService {
                 if (this._settings?.generalNotifications.bitcoinAddress && notify) {
                     await window.electron.showNotification('BTC address: ' + wallet.wallet?.name, 'Derivation: ' + wallet.derivationPath);
                 }
+
+                wallet.balance = await this.queryBalance(text);
 
                 return wallet;
             }
@@ -111,27 +115,18 @@ export class ClipboardService {
                     }
                 }
 
-                if (this._settings?.queryBalances) {
-                    const balanceItem = await this.queryBalance(text);
-
-                    if (balanceItem && notify) {
-                        // TODO
-                        // await window.electron.showNotification(paymentItem.merchant, paymentItem.description ?? '');
-                        return balanceItem;
-                    }
-                }
-
                 if (this._settings?.generalNotifications.bitcoinAddress && notify) {
                     await window.electron.showNotification('New Bitcoin Address in Clipboard', 'Bitcoin Address Detected.');
                 }
-                
+
                 return {
                     name: 'Bitcoin Address',
                     value: text,
                     address: text,
                     wallet: null,
                     derivationPath: null,
-                    private: false
+                    private: false,
+                    balance: await this.queryBalance(text)
                 } as AddressClipboardItem;
             }
         }
@@ -215,8 +210,7 @@ export class ClipboardService {
         }
     }
 
-    private async queryBalance(value: string): Promise<AddressClipboardItem | null> {
-      // TODO 
-      return null;
+    private async queryBalance(address: string): Promise<number | null> {
+        return (this._settings?.queryBalances) ? await window.electron.queryBalance(address) : null
     }
 }

@@ -1,7 +1,7 @@
+import mempoolJS from '@mempool/mempool.js';
 import { Address, AddressType } from "../../src/app/shared/models/address";
 import { AddressClipboardItem } from "../../src/app/shared/models/clipboard-item";
 import { ExtendedPublicKey, PolicyType, Wallet } from "../../src/app/shared/models/wallet.model";
-import mempoolJS from '@mempool/mempool.js';
 
 const bitcoin = require('bitcoinjs-lib');
 const ecc = require('tiny-secp256k1');
@@ -12,7 +12,7 @@ bitcoin.initEccLib(ecc);
 
 const MAX_ACCOUNT = 1;
 
-function getPrefix(address: string) {
+export function getPrefix(address: string) {
     if (address.startsWith('1')) {
         return '1';
     }
@@ -139,40 +139,21 @@ function getMultiSigAddress(wallet: Wallet, account: number, i: number, type: Ad
     throw Error("Multi sig address type not found.");
 }
 
-async function singleSig(wallet: Wallet, address: string, account: number, i: number, bip32: any): Promise<AddressClipboardItem | null> {
-  if (
-    getSingleSigAddress(wallet, account, i, AddressType.PayToPublicKeyHash, bip32) !== address &&
-    getSingleSigAddress(wallet, account, i, AddressType.PayToWitnessPublicKeyHash, bip32) !== address &&
-    getSingleSigAddress(wallet, account, i, AddressType.PayToTapRoot, bip32) !== address
-  ) {
-    return null;
-  }
+function singleSig(wallet: Wallet, address: string, account: number, i: number, bip32: any): AddressClipboardItem | null {
+    if (getSingleSigAddress(wallet, account, i, AddressType.PayToPublicKeyHash, bip32) != address &&
+        getSingleSigAddress(wallet, account, i, AddressType.PayToWitnessPublicKeyHash, bip32) != address &&
+        getSingleSigAddress(wallet, account, i, AddressType.PayToTapRoot, bip32) != address) {
+        return null;
+    }
 
-  try {
-    const { bitcoin: { addresses } } = mempoolJS();
-    const balance = await addresses.getAddress({ address: address });
-    console.log('Bitcoin Balance:', balance);
     return {
-      name: 'Bitcoin Address',
-      value: address,
-      address: address,
-      wallet: wallet,
-      derivationPath: `${account}/${i}`,
-      balance: balance.chain_stats.funded_txo_sum.toString() + " sats",
-      private: false,
+        name: 'Bitcoin Address',
+        value: address,
+        address: address,
+        wallet: wallet,
+        derivationPath: `${account}/${i}`,
+        private: false
     };
-  } catch (error) {
-    console.error('Error:', error);
-    return {
-      name: 'Bitcoin Address',
-      value: address,
-      address: address,
-      wallet: wallet,
-      derivationPath: `${account}/${i}`,
-      balance: "-",
-      private: false,
-    };
-  }
 }
 
 function toHex(key: ExtendedPublicKey, account: number, i: number, bip32: any) {
@@ -192,53 +173,47 @@ function multiSig(wallet: Wallet, address: string, account: number, i: number, b
         return null;
     }
 
-    var balance = "100";
-
     return {
         name: 'Bitcoin Address',
         value: address,
         address: address,
         wallet: wallet,
         derivationPath: `${account}/${i}`,
-        balance: balance,
         private: false
     };
 }
 
-export async function verifyAddress(wallets: Wallet[], address: string): Promise<AddressClipboardItem | null> {
-  var bip32 = BIP32Factory(ecc);
+export function verifyAddress(wallets: Wallet[], address: string): AddressClipboardItem | null {
+    var bip32 = BIP32Factory(ecc);
 
-  for (let j = 0; j < wallets.length; j++) {
-    const wallet = wallets[j];
-    for (let i = 0; i < (wallet.indexLimit ?? 50); i++) {
-      for (let k = 0; k <= MAX_ACCOUNT; k++) {
-        try {
-          if (wallet.policyType == 'Multi Sig') {
-            const result = multiSig(wallet, address, k, i, bip32);
+    for (let j = 0; j < wallets.length; j++) {
+        const wallet = wallets[j];
+        for (let i = 0; i < (wallet.indexLimit ?? 50); i++) {
+            for (let k = 0; k <= MAX_ACCOUNT; k++) {
+                try {
 
-            if (result) {
-              return result;
+                    if (wallet.policyType == 'Multi Sig') {
+                        var result = multiSig(wallet, address, k, i, bip32);
+
+                        if (result) {
+                            return result;
+                        }
+                    } else {
+                        var result = singleSig(wallet, address, k, i, bip32);
+
+                        if (result) {
+                            return result;
+                        }
+                    }
+                } catch (error) {
+                    console.log("verifyAddress Error: " + error)
+                }
             }
-          } else {
-            // Await the result of singleSig
-            const result = await singleSig(wallet, address, k, i, bip32);
-
-            if (result) {
-              console.log("verifyAddress returning result");
-              return result;
-            }
-          }
-        } catch (error) {
-          console.log("verifyAddress Error: " + error);
         }
-      }
     }
-  }
 
-  console.log("verifyAddress returning null");
-  return null;
+    return null;
 }
-
 
 export function verifyXpub(xpub: string): boolean {
     try {
@@ -260,4 +235,11 @@ export function verifyXpub(xpub: string): boolean {
         console.log(error);
         return false;
     }
+}
+
+export async function queryBalance(address: string): Promise<number> {
+    const { bitcoin: { addresses } } = mempoolJS();
+    const balance = await addresses.getAddress({ address: address });
+
+    return balance.chain_stats.funded_txo_sum - balance.chain_stats.spent_txo_sum;
 }

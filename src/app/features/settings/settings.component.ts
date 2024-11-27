@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { merge } from 'rxjs';
 import { ClipboardService } from '../../shared/services/clipboard.service';
 import { HistoryService } from '../../shared/services/history.service';
 import { SettingsService } from '../../shared/services/settings.service';
@@ -31,6 +32,7 @@ export class SettingsComponent {
 
         this.formGroup = new FormGroup({
             checkoutMode: new FormControl(settings.checkoutMode),
+            queryBalances: new FormControl(settings.queryBalances),
             generalNotifications: new FormGroup({
                 bitcoinAddress: new FormControl(settings.generalNotifications.bitcoinAddress),
                 bitcoinPublicKey: new FormControl(settings.generalNotifications.bitcoinPublicKey),
@@ -48,14 +50,13 @@ export class SettingsComponent {
             this.settingsService.save(settings);
         });
 
-        this.formGroup.get('checkoutMode')?.valueChanges.subscribe(() => {
+        merge(
+            this.formGroup.get('checkoutMode')!.valueChanges,
+            this.formGroup.get('queryBalances')!.valueChanges,
+            this.formGroup.get('developerMode')!.valueChanges
+        ).subscribe(() => {
             this.clipboardService.rerunGetClipboardItem();
         });
-
-        this.formGroup.get('developerMode')?.valueChanges.subscribe(() => {
-            this.clipboardService.rerunGetClipboardItem();
-        });
-
     }
 
     onClearHistory(): void {
