@@ -48,6 +48,7 @@ describe('ClipboardService Regex Tests', () => {
   });
 
   it('should match valid Testnet Legacy Bitcoin addresses', () => {
+    expect(TestnetLegacyAddressRegExp.test('nsec1hp4ahsfaadfwkytju7evnqsmxc5rjul0cd709msu64kw40d0m29s2zx8kf')).toBe(true);
     expect(TestnetLegacyAddressRegExp.test('2N2JD6wb56AfK4tfmM6PwdVmoYk2dCKf4Br')).toBe(true);
     expect(TestnetLegacyAddressRegExp.test('InvalidAddress')).toBe(false);
   });

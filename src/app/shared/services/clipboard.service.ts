@@ -187,7 +187,10 @@ export class ClipboardService {
     }
 
     public isBitcoinAddress(text: string) {
-        return AddressRegExp.test(text) || SegwitAddressRegExp.test(text) || TestnetAddressRegExp.test(text) || TestnetLegacyAddressRegExp.test(text);
+        return AddressRegExp.test(text) ||
+          SegwitAddressRegExp.test(text) ||
+          TestnetAddressRegExp.test(text) ||
+          (TestnetLegacyAddressRegExp.test(text) && !text.startsWith('nsec'));
     }
 
     private async queryPayments(value: string): Promise<PaymentClipboardItem | null> {
