@@ -16,7 +16,8 @@ TestnetLegacyAddressRegExp,
 ExtendedKeyRegExp,
 NostrPubKeyRegExp,
 NostrPrivateKeyRegExp,
-LightningAddressRegExp
+LightningAddressRegExp,
+isBitcoinAddress
  } from './regex'
 
 @Injectable({
@@ -78,7 +79,7 @@ export class ClipboardService {
             } as AddressClipboardItem;
         }
 
-        if (this.isBitcoinAddress(text)) {
+        if (isBitcoinAddress(text)) {
             const vault = await window.electron.verifyAddress(this._vaults, text);
 
             if (vault) {
@@ -184,13 +185,6 @@ export class ClipboardService {
         }
 
         return null;
-    }
-
-    public isBitcoinAddress(text: string) {
-        return AddressRegExp.test(text) ||
-          SegwitAddressRegExp.test(text) ||
-          TestnetAddressRegExp.test(text) ||
-          (TestnetLegacyAddressRegExp.test(text) && !text.startsWith('nsec'));
     }
 
     private async queryPayments(value: string): Promise<PaymentClipboardItem | null> {

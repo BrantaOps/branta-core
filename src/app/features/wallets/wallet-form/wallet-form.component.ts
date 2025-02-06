@@ -18,6 +18,7 @@ import { ClipboardService } from '../../../shared/services/clipboard.service';
 import { WalletService } from '../../../shared/services/wallet.service';
 import { XpubValidatorService } from '../../../shared/services/xpub-validator.service';
 import { DescriptorFormDialogComponent, DescriptorWallet } from './descriptor-form-dialog/descriptor-form-dialog.component';
+import { isBitcoinAddress } from '../../../shared/services/regex';
 
 interface AddressConfirmed {
     address: string;
@@ -162,7 +163,7 @@ export class WalletFormComponent {
         });
 
         this.clipboardTextSub = this.clipboardService.clipboardText.subscribe(async (text) => {
-            if (this.clipboardService.isBitcoinAddress(text)) {
+            if (isBitcoinAddress(text)) {
                 const wallet = await window.electron.verifyAddress([this.wallet], text);
                 this.addressConfirmed = {
                     address: text,
