@@ -16,6 +16,18 @@ describe('ClipboardService isBitcoinAddress', () => {
   it('should not match a nostr pub key', () => {
     expect(isBitcoinAddress('npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcscfpcq8')).toBe(false);
   });
+
+  it('should not match a nostr pub key', () => {
+    expect(isBitcoinAddress('npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcscfpcq8')).toBe(false);
+  });
+
+  it('should not match a nostr private key', () => {
+    expect(isBitcoinAddress('nsec1hp4ahsfaadfwkytju7evnqsmxc5rjul0cd709msu64kw40d0m29s2zx8kf')).toBe(false);
+  });
+
+  it('should match a testnet legacy address', () => {
+    expect(isBitcoinAddress('2N2JD6wb56AfK4tfmM6PwdVmoYk2dCKf4Br')).toBe(true);
+  });
 })
 
 describe('ClipboardService Regex Tests', () => {
@@ -57,7 +69,7 @@ describe('ClipboardService Regex Tests', () => {
   });
 
   it('should match valid Testnet Legacy Bitcoin addresses', () => {
-    expect(TestnetLegacyAddressRegExp.test('nsec1hp4ahsfaadfwkytju7evnqsmxc5rjul0cd709msu64kw40d0m29s2zx8kf')).toBe(true);
+    expect(TestnetLegacyAddressRegExp.test('nsec1hp4ahsfaadfwkytju7evnqsmxc5rjul0cd709msu64kw40d0m29s2zx8kf')).toBe(false);
     expect(TestnetLegacyAddressRegExp.test('2N2JD6wb56AfK4tfmM6PwdVmoYk2dCKf4Br')).toBe(true);
     expect(TestnetLegacyAddressRegExp.test('InvalidAddress')).toBe(false);
   });
