@@ -3,11 +3,20 @@ import {
   SegwitAddressRegExp,
   TestnetAddressRegExp,
   TestnetLegacyAddressRegExp,
-  ExtendedKeyRegExp,
   NostrPubKeyRegExp,
   NostrPrivateKeyRegExp,
-  LightningAddressRegExp
+  LightningAddressRegExp,
+  isBitcoinAddress
  } from './regex';
+
+describe('ClipboardService isBitcoinAddress', () => {
+  it('should match a valid Bitcoin Address', () => {
+    expect(isBitcoinAddress('1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa')).toBe(true);
+  });
+  it('should not match a nostr pub key', () => {
+    expect(isBitcoinAddress('npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcscfpcq8')).toBe(false);
+  });
+})
 
 describe('ClipboardService Regex Tests', () => {
   it('should match valid Bitcoin addresses', () => {
