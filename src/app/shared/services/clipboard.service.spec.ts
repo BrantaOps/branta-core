@@ -92,6 +92,7 @@ describe('ClipboardService Regex Tests', () => {
   it('should match valid Lightning addresses', () => {
     expect(LightningAddressRegExp.test('lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y')).toBe(true);
     expect(LightningAddressRegExp.test('lnbc5530n1pnn2jh0pp5gwzykw0ttdk84pr583lmq4f05nnvha9ae9k4q88gwkr6x503dlcqdq2f38xy6t5wvcqzzsxqrrsssp5yq8dcyjkf2wy5fasu6pm7z02l7lzkceq95a26krgnaaknkexlprq9qyyssq7qtyq7d7qwaftgajs496dkmylkrnmj5l4cunlyqpkadn08xyumt4nx79fh8auvd79a3hhr38q7t2j04zqysz48mrhhq3y9ufylazy7cqtv2804')).toBe(true);
+    expect(LightningAddressRegExp.test('LNBC1288860N1PNKJE6FPP5WH5CMFNWTVQ57LPJH2RXSKSKE5TTF3PPKYWJDLXFVSX3TURX2X2SDPDG3HKUCT5V5SXVATWV3EJQAR0YPEH2URSDAE8GGZDDAHKUCQZZSXQZJHSP5X4V8DV8E2J4EQNFQAY9MKX3LVPQXXGY2L543G7TCMMPV0PDTVMPS9P4GQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQPQYSGQYE6KNZJHHAHGQETDUHJ6JVTD3G98A7DC99ND9EYJU9UPC4FX90QZVUFF7Q9J5ERQFS055LYHD2W22XY2MDQD9T3GC4G2XFJYXJZF4NQPV7Y3P6')).toBe(true);
     expect(LightningAddressRegExp.test('lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y ')).toBe(false);
     expect(LightningAddressRegExp.test(' lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y')).toBe(false);
     expect(LightningAddressRegExp.test('-lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y')).toBe(false);

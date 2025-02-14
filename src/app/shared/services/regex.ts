@@ -7,7 +7,7 @@ export const TestnetLegacyAddressRegExp = new RegExp('^[2mn](?!sec|pub)[0-9a-zA-
 export const ExtendedKeyRegExp = new RegExp(XPUB_REGEX);
 export const NostrPubKeyRegExp = new RegExp('^npub[0-9a-z]{58,65}$');
 export const NostrPrivateKeyRegExp = new RegExp('^nsec[0-9a-z]{58,65}$');
-export const LightningAddressRegExp = new RegExp('^lnbc[a-zA-z0-9]+$');
+export const LightningAddressRegExp = new RegExp('^[lL][nN][bB][cC][a-zA-z0-9]+$');
 export const isBitcoinAddress = (text: string) => {
     return (
         AddressRegExp.test(text) ||
