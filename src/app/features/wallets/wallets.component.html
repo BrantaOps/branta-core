@@ -20,9 +20,13 @@
                         } @else {
                             <div>Single Sig</div>
                         }
-                        <div style="font-weight: bold">|</div>
+                        <div style="font-weight: bold; padding: 0 5px;">|</div>
                         <mat-form-field class="small-input">
-                            <input matInput type="number" min="10" max="2147483648" [value]="wallet.indexLimit ?? 50" type="number" (change)="onChangeIndexLimit($event, wallet)"/>
+                            <input matInput type="number" min="0" [max]="(wallet.indexLimit ?? 50) - 1" [value]="wallet.indexStart ?? 0" type="number" (change)="onChangeIndex($event, wallet, 'indexStart')"/>
+                        </mat-form-field>
+                        <div>to</div>
+                        <mat-form-field class="small-input">
+                            <input matInput type="number" [min]="(wallet.indexStart ?? 0) + 1" max="2147483648" [value]="wallet.indexLimit ?? 50" type="number" (change)="onChangeIndex($event, wallet, 'indexLimit')"/>
                         </mat-form-field>
                         <div>Addresses</div>
                     </div>

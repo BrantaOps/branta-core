@@ -187,7 +187,7 @@ export function verifyAddress(wallets: Wallet[], address: string): AddressClipbo
 
     for (let j = 0; j < wallets.length; j++) {
         const wallet = wallets[j];
-        for (let i = 0; i < (wallet.indexLimit ?? 50); i++) {
+        for (let i = (wallet.indexStart ?? 0); i < (wallet.indexLimit ?? 50) + 1; i++) {
             for (let k = 0; k <= MAX_ACCOUNT; k++) {
                 try {
 

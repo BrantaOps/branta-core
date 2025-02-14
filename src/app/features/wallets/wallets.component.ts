@@ -63,18 +63,28 @@ export class WalletsComponent {
         });
     }
 
-    onChangeIndexLimit(event: Event, wallet: Wallet): void {
-        const indexLimit = parseInt((event.target as HTMLInputElement).value);
+    onChangeIndex(event: Event, wallet: Wallet, indexType: 'indexLimit' | 'indexStart'): void {
+        const index = parseInt((event.target as HTMLInputElement).value);
 
-        if (isNaN(indexLimit)) {
-            this.toastrService.error(`Not a valid number.`);
-            (event.target as HTMLInputElement).value = (wallet.indexLimit ?? 50).toString();
+        let error: string | null = null;
+
+        if (isNaN(index)) {
+            error = 'Not a valid number.';
+        } else if (indexType == 'indexLimit' && index - 1 < (wallet.indexStart ?? 0)) {
+            error = 'Start index must be less than end index.';
+        } else if (indexType == 'indexStart' && index + 1 > (wallet.indexLimit ?? 50)) {
+            error = 'End index must be greater than start index.';
+        }
+
+        if (error !== null) {
+            this.toastrService.error(`Error updating '${wallet.name}': ${error}`);
+            (event.target as HTMLInputElement).value = (wallet[indexType] ?? 50).toString();
             return;
         }
 
-        wallet.indexLimit = indexLimit;
+        wallet[indexType] = index;
         this.walletService.updateWallet(wallet);
 
-        this.toastrService.success(`Updated wallet '${wallet.name}' to check first ${indexLimit} addresses.`)
+        this.toastrService.success(`Updated wallet '${wallet.name}' to check address indices ${wallet.indexStart} to ${wallet.indexLimit}.`)
     }
 }
