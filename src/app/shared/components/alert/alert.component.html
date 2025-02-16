@@ -1,0 +1,10 @@
+<div class="alert" [class]="'alert-' + type" style="margin-top: 16px">
+    <div>
+      @if (type == "warning") {
+          <mat-icon class="icon">warning</mat-icon>
+      } @else if (type == "error") {
+          <mat-icon class="icon">error</mat-icon>
+      }
+    </div>
+    <div class="description"><strong>{{ type | titlecase }}!</strong> {{ text }}</div>
+</div>

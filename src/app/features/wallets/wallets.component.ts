@@ -9,14 +9,14 @@ import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { PolicyType, Wallet, getIcon } from '../../shared/models/wallet.model';
-import { XPubPipe } from '../../shared/pipes/xpub.pipe';
 import { ClipboardService } from '../../shared/services/clipboard.service';
 import { WalletService } from '../../shared/services/wallet.service';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 @Component({
     selector: 'app-wallets',
     standalone: true,
-    imports: [MatButtonModule, MatIconModule, RouterModule, XPubPipe, MatTooltipModule, MatFormFieldModule, MatInputModule],
+    imports: [MatButtonModule, MatIconModule, RouterModule, MatTooltipModule, MatFormFieldModule, MatInputModule, AlertComponent],
     templateUrl: './wallets.component.html',
     styleUrl: './wallets.component.scss'
 })
