@@ -79,6 +79,11 @@ $custom-theme: mat.define-dark-theme(
     border-radius: 10px;
 }
 
+
+.address {
+    font-family: 'Roboto Mono', monospace;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     background-color: transparent;
