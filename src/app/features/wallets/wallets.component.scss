@@ -34,33 +34,36 @@
 
         .wallet {
             @extend .app-card;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 15px;
 
-            .logo {
-                height: 40px;
+            .wallet-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 15px;
 
-                img {
-                    height: 100%;
-                }
-            }
+                .logo {
+                    height: 40px;
 
-            .details {
-                flex: 1;
-
-                .title {
-                    font-size: 18px;
+                    img {
+                        height: 100%;
+                    }
                 }
 
-                .subtitle {
-                    font-size: 14px;
-                    color: $text-gray;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    gap: 6px;
+                .details {
+                    flex: 1;
+
+                    .title {
+                        font-size: 18px;
+                    }
+
+                    .subtitle {
+                        font-size: 14px;
+                        color: $text-gray;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: 6px;
+                    }
                 }
             }
         }
@@ -90,6 +93,21 @@
 
     ::ng-deep .mat-mdc-form-field-bottom-align {
         display: none;
+    }
+}
+
+.alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    gap: 10px;
+    color: #fff3cd;
+    background-color: #856404;
+
+    .title {
+        font-weight: bold;
     }
 }
 

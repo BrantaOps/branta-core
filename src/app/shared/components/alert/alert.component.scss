@@ -1,0 +1,22 @@
+.alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    gap: 10px;
+
+    .title {
+        font-weight: bold;
+    }
+}
+
+.alert-warning {
+    color: #fff3cd;
+    background-color: #856404;
+}
+
+.alert-error {
+    color: #f8d7da;
+    background-color: #721c24;
+}

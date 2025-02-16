@@ -9,32 +9,41 @@
     <div class="content">
         @for (wallet of wallets; track wallet) {
             <div class="wallet">
-                <div class="logo" [matTooltip]="getIcon(wallet).label">
-                    <img [src]="'assets/wallet/icon/' + getIcon(wallet).icon" width="40" />
-                </div>
-                <div class="details">
-                    <div class="title">{{ wallet.name }}</div>
-                    <div class="subtitle">
-                        @if (wallet.policyType === PolicyType.MultiSig) {
-                            <div>{{ wallet.m }} of {{ wallet.n }} Multi Sig</div>
-                        } @else {
-                            <div>Single Sig</div>
-                        }
-                        <div style="font-weight: bold">|</div>
-                        <mat-form-field class="small-input">
-                            <input matInput type="number" min="10" max="2147483648" [value]="wallet.indexLimit ?? 50" type="number" (change)="onChangeIndexLimit($event, wallet)"/>
-                        </mat-form-field>
-                        <div>Addresses</div>
+                <div class="wallet-content">
+                    <div class="logo" [matTooltip]="getIcon(wallet).label">
+                        <img [src]="'assets/wallet/icon/' + getIcon(wallet).icon" width="40" />
+                    </div>
+                    <div class="details">
+                        <div class="title">{{ wallet.name }}</div>
+                        <div class="subtitle">
+                            @if (wallet.policyType === PolicyType.MultiSig) {
+                                <div>{{ wallet.m }} of {{ wallet.n }} Multi Sig</div>
+                            } @else {
+                                <div>Single Sig</div>
+                            }
+                            <div style="font-weight: bold; padding: 0 5px;">|</div>
+                            <mat-form-field class="small-input">
+                                <input matInput type="number" min="0" [max]="(wallet.indexLimit ?? 50) - 1" [value]="wallet.indexStart ?? 0" type="number" (change)="onChangeIndex($event, wallet, 'indexStart')"/>
+                            </mat-form-field>
+                            <div>to</div>
+                            <mat-form-field class="small-input">
+                                <input matInput type="number" [min]="(wallet.indexStart ?? 0) + 1" max="2147483648" [value]="wallet.indexLimit ?? 50" type="number" (change)="onChangeIndex($event, wallet, 'indexLimit')"/>
+                            </mat-form-field>
+                            <div>Addresses</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-icon-button (click)="editWallet(wallet.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="openDialog(wallet)" color="warn">
+                            <mat-icon>delete</mat-icon>
+                        </button>
                     </div>
                 </div>
-                <div>
-                    <button mat-icon-button (click)="editWallet(wallet.id)">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="openDialog(wallet)" color="warn">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </div>
+                @if ((wallet.indexLimit ?? 50) - (wallet.indexStart ?? 0) >= 500) {
+                    <app-alert type="warning" text="An address range over 500 addresses will impact Branta's performance."></app-alert>
+                }
             </div>
         }
         @if (wallets.length == 0) {
