@@ -85,6 +85,6 @@ export class WalletsComponent {
         wallet[indexType] = index;
         this.walletService.updateWallet(wallet);
 
-        this.toastrService.success(`Updated wallet '${wallet.name}' to check address indices ${wallet.indexStart} to ${wallet.indexLimit}.`)
+        this.toastrService.success(`Updated wallet '${wallet.name}' to check address indices ${wallet.indexStart ?? 0} to ${wallet.indexLimit ?? 50}.`)
     }
 }
