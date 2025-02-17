@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ClipboardService } from '../../shared/services/clipboard.service';
 import { HistoryService } from '../../shared/services/history.service';
 import { SettingsService } from '../../shared/services/settings.service';
@@ -19,12 +21,13 @@ export class SettingsComponent {
     formGroup: FormGroup;
 
     checkoutModeTooltip = 'Verify BTC/LN checkouts & invoices. Requires internet.';
-    developerModeTooltip = 'Only check this if you\'re a developer. Enables staging environment.';
+    developerModeTooltip = "Only check this if you're a developer. Enables staging environment.";
 
     constructor(
         private settingsService: SettingsService,
         private historyService: HistoryService,
-        private clipboardService: ClipboardService
+        private clipboardService: ClipboardService,
+        public dialog: MatDialog
     ) {
         const settings = settingsService.get();
 
@@ -35,7 +38,7 @@ export class SettingsComponent {
                 bitcoinPublicKey: new FormControl(settings.generalNotifications.bitcoinPublicKey),
                 nostrPublicKey: new FormControl(settings.generalNotifications.nostrPublicKey),
                 nostrPrivateKey: new FormControl(settings.generalNotifications.nostrPrivateKey),
-                lightningAddress: new FormControl(settings.generalNotifications.lightningAddress),
+                lightningAddress: new FormControl(settings.generalNotifications.lightningAddress)
             }),
             clipboardHistory: new FormGroup({
                 show: new FormControl(settings.clipboardHistory.show)
@@ -54,10 +57,21 @@ export class SettingsComponent {
         this.formGroup.get('developerMode')?.valueChanges.subscribe(() => {
             this.clipboardService.rerunGetClipboardItem();
         });
-
     }
 
     onClearHistory(): void {
-        this.historyService.clearHistory();
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                title: 'Clear History',
+                message: 'Are you sure you want to clear history? This cannot be undone.',
+                submitText: 'Clear History'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result === true) {
+                this.historyService.clearHistory();
+            }
+        });
     }
 }
