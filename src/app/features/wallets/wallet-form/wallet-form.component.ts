@@ -9,16 +9,16 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { CanComponentDeactivate } from '../../../shared/interfaces/can-deactivate.interface';
 import { Address } from '../../../shared/models/address';
 import { Icon, IconOption, iconOptions } from '../../../shared/models/icon';
 import { ExtendedPublicKey, PolicyType, Wallet } from '../../../shared/models/wallet.model';
 import { ClipboardService } from '../../../shared/services/clipboard.service';
+import { isBitcoinAddress } from '../../../shared/services/regex';
 import { WalletService } from '../../../shared/services/wallet.service';
 import { XpubValidatorService } from '../../../shared/services/xpub-validator.service';
 import { DescriptorFormDialogComponent, DescriptorWallet } from './descriptor-form-dialog/descriptor-form-dialog.component';
-import { isBitcoinAddress } from '../../../shared/services/regex';
 
 interface AddressConfirmed {
     address: string;
@@ -43,7 +43,7 @@ interface AddressConfirmed {
     templateUrl: './wallet-form.component.html',
     styleUrl: './wallet-form.component.scss'
 })
-export class WalletFormComponent {
+export class WalletFormComponent implements CanComponentDeactivate {
     nameFormGroup: FormGroup;
     keysFormGroup: FormGroup;
     addressConfirmationFormGroup: FormGroup;
@@ -79,7 +79,7 @@ export class WalletFormComponent {
         private route: ActivatedRoute,
         public dialog: MatDialog,
         public xpubValidatorService: XpubValidatorService,
-        public clipboardService: ClipboardService,
+        public clipboardService: ClipboardService
     ) {
         this.route.queryParams.subscribe((params) => {
             const walletId: number = params['walletId'];
@@ -89,7 +89,9 @@ export class WalletFormComponent {
                 this.wallets = wallets;
             });
 
-            this.selectedIcon = this.existingWallet ? iconOptions.find(option => option.value == this.existingWallet!.icon) || iconOptions[0] : iconOptions[0];
+            this.selectedIcon = this.existingWallet
+                ? iconOptions.find((option) => option.value == this.existingWallet!.icon) || iconOptions[0]
+                : iconOptions[0];
 
             this.nameFormGroup = this.fb.group({
                 name: this.fb.control(this.existingWallet?.name ?? '', [Validators.required, this.uniqueNameValidator.bind(this)]),
@@ -147,7 +149,7 @@ export class WalletFormComponent {
 
     getKeyForm(key: ExtendedPublicKey): FormGroup {
         return this.fb.group({
-            value: this.fb.control(key.value, [Validators.required, Validators.pattern(ClipboardService.XPUB_REGEX)], [this.xpubValidatorService.validate]),
+            value: this.fb.control(key.value, [Validators.required, Validators.pattern(ClipboardService.XPUB_REGEX)], [this.xpubValidatorService.validate])
         });
     }
 
@@ -206,6 +208,10 @@ export class WalletFormComponent {
         }
 
         this.clipboardService.rerunGetClipboardItem();
+    }
+
+    hasUnsavedChanges(): boolean {
+        return this.nameFormGroup?.dirty || this.keysFormGroup.dirty || this.addressConfirmationFormGroup.dirty;
     }
 
     onShareFeedback(): void {

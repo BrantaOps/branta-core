@@ -5,6 +5,7 @@ import { SettingsComponent } from './features/settings/settings.component';
 import { VaultsComponent } from './features/vaults/vaults.component';
 import { WalletFormComponent } from './features/wallets/wallet-form/wallet-form.component';
 import { WalletsComponent } from './features/wallets/wallets.component';
+import { UnsavedChangesGuard } from './shared/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
     {
@@ -23,7 +24,8 @@ export const routes: Routes = [
     },
     {
         path: 'wallets/add',
-        component: WalletFormComponent
+        component: WalletFormComponent,
+        canDeactivate: [UnsavedChangesGuard]
     },
     {
         path: 'vaults',
