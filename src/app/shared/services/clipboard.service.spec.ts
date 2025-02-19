@@ -1,103 +1,263 @@
-import {
-  AddressRegExp,
-  SegwitAddressRegExp,
-  TestnetAddressRegExp,
-  TestnetLegacyAddressRegExp,
-  NostrPubKeyRegExp,
-  NostrPrivateKeyRegExp,
-  LightningAddressRegExp,
-  isBitcoinAddress
- } from './regex';
+import { Settings } from '../models/settings';
+import { ServerService } from './server.service';
+import { Vault } from '../models/vault.model';
+import { PolicyType, Wallet } from '../models/wallet.model';
+import { AddressClipboardItem, PaymentClipboardItem } from '../models/clipboard-item';
+import { verifyAddress } from '../../../../app/lib/verify-address';
+import { decodeLightningPayment } from '../../../../app/lib/lightning';
+import { of } from 'rxjs';
+import { BaseClipboardService } from './base-clipboard.service';
 
-describe('ClipboardService isBitcoinAddress', () => {
-  it('should match a valid Bitcoin Address', () => {
-    expect(isBitcoinAddress('1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa')).toBe(true);
-  });
-  it('should not match a nostr pub key', () => {
-    expect(isBitcoinAddress('npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcscfpcq8')).toBe(false);
-  });
+const xpubs = ['xpub6Cbd89HtFkGQMk37HjxjpxB7zCysPUz2VzmSwGZPhH11vVaGZtbGw5pSyFe6Ff8qL8EASUL1WYaExqL2ULGwRd2RJkw3Yx8jU2CTNrZx65X'];
+const npub = 'npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcscfpcq8';
+const nsec = 'nsec1hp4ahsfaadfwkytju7evnqsmxc5rjul0cd709msu64kw40d0m29s2zx8kf';
+const lnbc = [
+    'lnbc5530n1pnn2jh0pp5gwzykw0ttdk84pr583lmq4f05nnvha9ae9k4q88gwkr6x503dlcqdq2f38xy6t5wvcqzzsxqrrsssp5yq8dcyjkf2wy5fasu6pm7z02l7lzkceq95a26krgnaaknkexlprq9qyyssq7qtyq7d7qwaftgajs496dkmylkrnmj5l4cunlyqpkadn08xyumt4nx79fh8auvd79a3hhr38q7t2j04zqysz48mrhhq3y9ufylazy7cqtv2804',
+    'lnbc1288860n1pnkje6fpp5wh5cmfnwtvq57lpjh2rxskske5ttf3ppkywjdlxfvsx3turx2x2sdpdg3hkuct5v5sxvatwv3ejqar0ypeh2ursdae8ggzddahkucqzzsxqzjhsp5x4v8dv8e2j4eqnfqay9mkx3lvpqxxgy2l543g7tcmmpv0pdtvmps9p4gqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpqysgqye6knzjhhahgqetduhj6jvtd3g98a7dc99nd9eyju9upc4fx90qzvuff7q9j5erqfs055lyhd2w22xy2mdqd9t3gc4g2xfjyxjzf4nqpv7y3p6'
+];
 
-  it('should not match a nostr pub key', () => {
-    expect(isBitcoinAddress('npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcscfpcq8')).toBe(false);
-  });
+var serverServiceMock = {
+    getPayment: (value: string) => {
+        if (['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', lnbc[0]].includes(value)) {
+            return of({
+                payment: 'Payment',
+                merchant: 'Branta'
+            } as PaymentClipboardItem);
+        }
 
-  it('should not match a nostr private key', () => {
-    expect(isBitcoinAddress('nsec1hp4ahsfaadfwkytju7evnqsmxc5rjul0cd709msu64kw40d0m29s2zx8kf')).toBe(false);
-  });
+        throw new Error();
+    }
+} as unknown as ServerService;
 
-  it('should match a testnet legacy address', () => {
-    expect(isBitcoinAddress('2N2JD6wb56AfK4tfmM6PwdVmoYk2dCKf4Br')).toBe(true);
-  });
-})
+beforeAll(() => {
+    global.window = Object.create({});
 
-describe('ClipboardService Regex Tests', () => {
-  it('should match valid Bitcoin addresses', () => {
-    expect(AddressRegExp.test('1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa')).toBe(true);
-    expect(AddressRegExp.test('3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy')).toBe(true);
-    expect(AddressRegExp.test(' 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy')).toBe(false);
-    expect(AddressRegExp.test('3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy ')).toBe(false);
-    expect(AddressRegExp.test('3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy.')).toBe(false);
-    expect(AddressRegExp.test('-3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy')).toBe(false);
-    expect(AddressRegExp.test('-3J98t1WpEZ73/CNmQviecrnyiWrnqRhWNLy')).toBe(false);
-    expect(AddressRegExp.test('InvalidAddress')).toBe(false);
-  });
+    global.window.electron = {
+        showNotification: jest.fn().mockResolvedValue(null),
+        verifyAddress,
+        decodeLightning: decodeLightningPayment
+    } as any;
+});
 
-  it('should match valid SegWit Bitcoin addresses', () => {
-    expect(SegwitAddressRegExp.test('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080')).toBe(true);
-    expect(SegwitAddressRegExp.test('bc1qrp33g0qynl8xe4dp9r83pkkfjhx0wlh8yk69yg')).toBe(true);
-    expect(SegwitAddressRegExp.test('bc1qrp33g0qynl8xe4dp9r83pkkfjhx0wlh8yk69yg ')).toBe(false);
-    expect(SegwitAddressRegExp.test(' bc1qrp33g0qynl8xe4dp9r83pkkfjhx0wlh8yk69yg')).toBe(false);
-    expect(SegwitAddressRegExp.test('bc1qrp33g0qynl/8xe4dp9r83pkkfjhx0wlh8yk69yg')).toBe(false);
-    expect(SegwitAddressRegExp.test('bc1qrp33g0qynl8xe4dp9r83pkkfjhx0.wlh8yk69yg')).toBe(false);
-    expect(SegwitAddressRegExp.test('bc1qrp33g0qynl8xe4dp9r83pkkfjhx0wlh8yk69yg$')).toBe(false);
-    expect(SegwitAddressRegExp.test('InvalidAddress')).toBe(false);
-  });
+beforeEach(() => {
+    jest.resetAllMocks();
+});
 
-  it('should match valid TapRoot Bitcoin addresses', () => {
-    expect(SegwitAddressRegExp.test('bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297')).toBe(true);
-    expect(SegwitAddressRegExp.test(' bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297')).toBe(false);
-    expect(SegwitAddressRegExp.test('%bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297')).toBe(false);
-    expect(SegwitAddressRegExp.test('bc1p5d7rjq7g6rdk2yhzks/9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297')).toBe(false);
-    expect(SegwitAddressRegExp.test('bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297.')).toBe(false);
-    expect(SegwitAddressRegExp.test('bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297://')).toBe(false);
-  });
+afterAll(() => {
+    jest.restoreAllMocks();
+});
 
-  it('should match valid Testnet SegWit Bitcoin addresses', () => {
-    expect(TestnetAddressRegExp.test('tb1q6l2jt0ysay05yg2af0zx87p06vdyf4rhcp6npe')).toBe(true);
-    expect(TestnetAddressRegExp.test('tb1p6rgz84xkrn8l96s7vx6jd7xae34gs22c9a20q5p86esfj4qr3c0q3k5jjs')).toBe(true);
-    expect(TestnetAddressRegExp.test('InvalidAddress')).toBe(false);
-  });
+describe('ClipboardService getClipboardItem', () => {
+    test.each([
+        [true, true, 1],
+        [false, true, 0],
+        [true, false, 0],
+        [false, false, 0]
+    ])(
+        'Genesis Block: notify: %p, notifyBitcoinAddress: %p, notificationCount: %i',
+        async (notify: boolean, bitcoinAddress: boolean, notificationCount: number) => {
+            const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
 
-  it('should match valid Testnet Legacy Bitcoin addresses', () => {
-    expect(TestnetLegacyAddressRegExp.test('nsec1hp4ahsfaadfwkytju7evnqsmxc5rjul0cd709msu64kw40d0m29s2zx8kf')).toBe(false);
-    expect(TestnetLegacyAddressRegExp.test('2N2JD6wb56AfK4tfmM6PwdVmoYk2dCKf4Br')).toBe(true);
-    expect(TestnetLegacyAddressRegExp.test('InvalidAddress')).toBe(false);
-  });
+            var result = await BaseClipboardService.getClipboardItem(
+                '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+                notify,
+                [],
+                [],
+                {
+                    generalNotifications: {
+                        bitcoinAddress
+                    }
+                } as Settings,
+                serverServiceMock
+            );
 
-  it('should match valid Nostr public keys', () => {
-    expect(NostrPubKeyRegExp.test('npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcscfpcq8')).toBe(true);
-    expect(NostrPubKeyRegExp.test('npub1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpt:h0ywhm6czxcscfpcq8')).toBe(false);
-    expect(NostrPubKeyRegExp.test('npub1examplekey1234567890abcdef ')).toBe(false);
-    expect(NostrPubKeyRegExp.test('InvalidNostrPubKey')).toBe(false);
-  });
+            expect(showNotificationMock).toHaveBeenCalledTimes(notificationCount);
+            expect(result?.name).toBe('Bitcoin Address: Genesis Block');
+        }
+    );
 
-  it('should match valid Nostr private keys', () => {
-    expect(NostrPrivateKeyRegExp.test('nsec1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcs5l2exj')).toBe(true);
-    expect(NostrPrivateKeyRegExp.test('nsec1d4ed5x.49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcs5l2exj')).toBe(false);
-    expect(NostrPrivateKeyRegExp.test('nsec1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcs5l2exj:')).toBe(false);
-    expect(NostrPrivateKeyRegExp.test('nsec1d4ed5x49d7p24xn63flj4985dc4gpfngdhtqcxpth0ywhm6czxcs5l2exj ')).toBe(false);
-    expect(NostrPrivateKeyRegExp.test('InvalidNostrPrivateKey')).toBe(false);
-  });
+    test.each([
+        ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', true, true, 'Vault 1', 1],
+        ['bc1qk8rc8j4sgl0dnu4n4pusqkk4dny7n4pv7sh3s3', true, false, 'Vault 1', 0],
+        ['bc1q8vwqtsgltr5dxnnntxn6v9kchpzywywcfd0jsd', false, true, undefined, 0]
+    ])('Vault: %s', async (address: string, notify: boolean, bitcoinAddress: boolean, vaultName: string | undefined, notificationCount: number) => {
+        const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
 
-  it('should match valid Lightning addresses', () => {
-    expect(LightningAddressRegExp.test('lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y')).toBe(true);
-    expect(LightningAddressRegExp.test('lnbc5530n1pnn2jh0pp5gwzykw0ttdk84pr583lmq4f05nnvha9ae9k4q88gwkr6x503dlcqdq2f38xy6t5wvcqzzsxqrrsssp5yq8dcyjkf2wy5fasu6pm7z02l7lzkceq95a26krgnaaknkexlprq9qyyssq7qtyq7d7qwaftgajs496dkmylkrnmj5l4cunlyqpkadn08xyumt4nx79fh8auvd79a3hhr38q7t2j04zqysz48mrhhq3y9ufylazy7cqtv2804')).toBe(true);
-    expect(LightningAddressRegExp.test('LNBC1288860N1PNKJE6FPP5WH5CMFNWTVQ57LPJH2RXSKSKE5TTF3PPKYWJDLXFVSX3TURX2X2SDPDG3HKUCT5V5SXVATWV3EJQAR0YPEH2URSDAE8GGZDDAHKUCQZZSXQZJHSP5X4V8DV8E2J4EQNFQAY9MKX3LVPQXXGY2L543G7TCMMPV0PDTVMPS9P4GQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQPQYSGQYE6KNZJHHAHGQETDUHJ6JVTD3G98A7DC99ND9EYJU9UPC4FX90QZVUFF7Q9J5ERQFS055LYHD2W22XY2MDQD9T3GC4G2XFJYXJZF4NQPV7Y3P6')).toBe(true);
-    expect(LightningAddressRegExp.test('lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y ')).toBe(false);
-    expect(LightningAddressRegExp.test(' lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y')).toBe(false);
-    expect(LightningAddressRegExp.test('-lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y')).toBe(false);
-    expect(LightningAddressRegExp.test('lnbc1pwr45dpp5q9wa3sjr-4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y')).toBe(false);
-    expect(LightningAddressRegExp.test('lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y://')).toBe(false);
-    expect(LightningAddressRegExp.test('InvalidLightningAddress')).toBe(false);
-  });
+        var result = (await BaseClipboardService.getClipboardItem(
+            address,
+            notify,
+            [
+                {
+                    id: 1,
+                    name: 'Vault 1',
+                    policyType: PolicyType.SingleSig,
+                    keys: [{ value: xpubs[0] }],
+                    m: 1,
+                    n: 1
+                }
+            ] as Vault[],
+            [],
+            {
+                generalNotifications: {
+                    bitcoinAddress
+                }
+            } as Settings,
+            serverServiceMock
+        )) as AddressClipboardItem;
+
+        expect(showNotificationMock).toHaveBeenCalledTimes(notificationCount);
+        expect(result?.wallet?.name).toBe(vaultName);
+    });
+
+    test.each([
+        ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', true, true, 'Wallet 1', 1],
+        ['bc1qk8rc8j4sgl0dnu4n4pusqkk4dny7n4pv7sh3s3', true, false, 'Wallet 1', 0],
+        ['bc1q8vwqtsgltr5dxnnntxn6v9kchpzywywcfd0jsd', false, true, undefined, 0]
+    ])('Wallet: %s', async (address: string, notify: boolean, bitcoinAddress: boolean, vaultName: string | undefined, notificationCount: number) => {
+        const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
+
+        var result = (await BaseClipboardService.getClipboardItem(
+            address,
+            notify,
+            [],
+            [
+                {
+                    id: 1,
+                    name: 'Wallet 1',
+                    policyType: PolicyType.SingleSig,
+                    keys: [{ value: xpubs[0] }],
+                    m: 1,
+                    n: 1
+                }
+            ] as Wallet[],
+            {
+                generalNotifications: {
+                    bitcoinAddress
+                }
+            } as Settings,
+            serverServiceMock
+        )) as AddressClipboardItem;
+
+        expect(showNotificationMock).toHaveBeenCalledTimes(notificationCount);
+        expect(result?.wallet?.name).toBe(vaultName);
+    });
+
+    test.each([
+        ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', true, true, 'Payment', 1],
+        ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', false, true, undefined, 1],
+        ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', true, false, 'Payment', 0],
+        ['1HD1cVCJ5ZTgF6Txxxxxxxxxxxxxxxxxxz', true, true, undefined, 1]
+    ])('Payment: %s', async (address: string, checkoutMode: boolean, notify: boolean, paymentValue: string | undefined, notificationCount: number) => {
+        const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
+
+        var result = (await BaseClipboardService.getClipboardItem(
+            address,
+            notify,
+            [],
+            [],
+            {
+                checkoutMode,
+                generalNotifications: {
+                    bitcoinAddress: true
+                }
+            } as Settings,
+            serverServiceMock
+        )) as PaymentClipboardItem;
+
+        expect(showNotificationMock).toHaveBeenCalledTimes(notificationCount);
+        expect(result?.payment).toBe(paymentValue);
+    });
+
+    test.each([
+        [npub, true, true, 1],
+        [npub, false, true, 0],
+        [npub, true, false, 0]
+    ])('Nostr Public Key: %s', async (value: string, notify: boolean, nostrPublicKey: boolean, notificationCount: number) => {
+        const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
+
+        var result = (await BaseClipboardService.getClipboardItem(
+            value,
+            notify,
+            [],
+            [],
+            {
+                generalNotifications: {
+                    nostrPublicKey
+                }
+            } as Settings,
+            serverServiceMock
+        )) as PaymentClipboardItem;
+
+        expect(showNotificationMock).toHaveBeenCalledTimes(notificationCount);
+        expect(result?.value).toBe(npub);
+    });
+
+    test.each([
+        [nsec, true, true, 1],
+        [nsec, false, true, 0],
+        [nsec, true, false, 0]
+    ])('Nostr Private Key: %s', async (value: string, notify: boolean, nostrPrivateKey: boolean, notificationCount: number) => {
+        const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
+
+        var result = (await BaseClipboardService.getClipboardItem(
+            value,
+            notify,
+            [],
+            [],
+            {
+                generalNotifications: {
+                    nostrPrivateKey
+                }
+            } as Settings,
+            serverServiceMock
+        )) as PaymentClipboardItem;
+
+        expect(showNotificationMock).toHaveBeenCalledTimes(notificationCount);
+        expect(result?.value).toBe(nsec);
+    });
+
+    test.each([
+        [
+            'Invalid lightning address that matches regex should show nothing',
+            'lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y',
+            true,
+            true,
+            true,
+            undefined,
+            0
+        ],
+        ['Lightning address on payment server should show default when checkout is off.', lnbc[0], false, true, true, undefined, 1],
+        ['Lightning address on payment server should show payment when checkout is on.', lnbc[0], true, true, true, 'Payment', 1],
+        ['Lightning address not on payment server should not show payment when checkout is on.', lnbc[1], true, true, true, undefined, 1]
+    ])(
+        'Lightning: %s',
+        async (
+            _testDescription: string,
+            value: string,
+            checkoutMode: boolean,
+            notify: boolean,
+            lightningAddress: boolean,
+            paymentValue: string | undefined,
+            notificationCount: number
+        ) => {
+            const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
+
+            var result = (await BaseClipboardService.getClipboardItem(
+                value,
+                notify,
+                [],
+                [],
+                {
+                    checkoutMode,
+                    generalNotifications: {
+                        lightningAddress
+                    }
+                } as Settings,
+                serverServiceMock
+            )) as PaymentClipboardItem;
+
+            expect(showNotificationMock).toHaveBeenCalledTimes(notificationCount);
+            expect(result?.payment).toBe(paymentValue);
+        }
+    );
 });
