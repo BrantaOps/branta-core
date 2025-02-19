@@ -69,6 +69,7 @@ export class WalletFormComponent implements CanComponentDeactivate {
     Icon = Icon;
     iconOptions = iconOptions;
     selectedIcon: any;
+    isSubmitSuccess: boolean = false;
 
     wallets: Wallet[] = [];
 
@@ -199,11 +200,12 @@ export class WalletFormComponent implements CanComponentDeactivate {
                 if (result === true) {
                     this.walletService.updateWallet({ ...this.wallet, id: this.existingWallet!.id });
                 }
-
+                this.isSubmitSuccess = true;
                 this.router.navigate(['wallets']);
             });
         } else {
             this.walletService.addWallet(this.wallet);
+            this.isSubmitSuccess = true;
             this.router.navigate(['wallets']);
         }
 
@@ -211,7 +213,7 @@ export class WalletFormComponent implements CanComponentDeactivate {
     }
 
     hasUnsavedChanges(): boolean {
-        return this.nameFormGroup?.dirty || this.keysFormGroup.dirty || this.addressConfirmationFormGroup.dirty;
+        return !this.isSubmitSuccess && (this.nameFormGroup?.dirty || this.keysFormGroup.dirty || this.addressConfirmationFormGroup.dirty);
     }
 
     onShareFeedback(): void {
