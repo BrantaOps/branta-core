@@ -14,7 +14,7 @@ export class UnsavedChangesGuard implements CanDeactivate<CanComponentDeactivate
                 const dialogRef = component.dialog.open(ConfirmationDialogComponent, {
                     data: {
                         title: 'Confirm Exit',
-                        message: 'You have unsaved changes to this form. Are you sure you want to exit?',
+                        message: 'You have unsaved changes. Are you sure you want to exit?',
                         submitText: 'Yes'
                     },
                     width: '450px'
