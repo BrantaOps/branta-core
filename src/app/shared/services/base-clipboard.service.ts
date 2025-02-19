@@ -16,7 +16,10 @@ export class BaseClipboardService {
         serverService: ServerService
     ): Promise<ClipboardItem | null> {
         if (text == '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa') {
-            await window.electron.showNotification('Bitcoin genesis block address copied.', 'We are all Satoshi');
+            if (settings?.generalNotifications.bitcoinAddress && notify) {
+                await window.electron.showNotification('Bitcoin genesis block address copied.', 'We are all Satoshi');
+            }
+
             return {
                 name: 'Bitcoin Address: Genesis Block',
                 value: text,
@@ -53,8 +56,11 @@ export class BaseClipboardService {
                 if (settings?.checkoutMode) {
                     const paymentItem = await this.queryPayments(text, serverService);
 
-                    if (paymentItem && notify) {
-                        await window.electron.showNotification(paymentItem.merchant, paymentItem.description ?? '');
+                    if (paymentItem) {
+                        if (notify) {
+                            await window.electron.showNotification(paymentItem.merchant, paymentItem.description ?? '');
+                        }
+
                         return paymentItem;
                     }
                 }
@@ -109,6 +115,10 @@ export class BaseClipboardService {
 
         if (LightningAddressRegExp.test(text)) {
             const result = await window.electron.decodeLightning(text);
+
+            if (!result) {
+                return null;
+            }
 
             if (settings?.checkoutMode) {
                 const paymentItem = await this.queryPayments(text, serverService);

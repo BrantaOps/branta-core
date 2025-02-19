@@ -49,10 +49,10 @@ afterAll(() => {
 
 describe('ClipboardService getClipboardItem', () => {
     test.each([
-        [true, true, 1]
-        // [false, true, 0],
-        // [true, false, 0],
-        // [false, false, 0],
+        [true, true, 1],
+        [false, true, 0],
+        [true, false, 0],
+        [false, false, 0]
     ])(
         'Genesis Block: notify: %p, notifyBitcoinAddress: %p, notificationCount: %i',
         async (notify: boolean, bitcoinAddress: boolean, notificationCount: number) => {
@@ -145,7 +145,7 @@ describe('ClipboardService getClipboardItem', () => {
     test.each([
         ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', true, true, 'Payment', 1],
         ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', false, true, undefined, 1],
-        // ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', true, false, 'Payment', 0],
+        ['1HD1cVCJ5ZTgF6Tp7a7F92qqe3945NpKtu', true, false, 'Payment', 0],
         ['1HD1cVCJ5ZTgF6Txxxxxxxxxxxxxxxxxxz', true, true, undefined, 1]
     ])('Payment: %s', async (address: string, checkoutMode: boolean, notify: boolean, paymentValue: string | undefined, notificationCount: number) => {
         const showNotificationMock = jest.spyOn(window.electron, 'showNotification').mockResolvedValue();
@@ -217,7 +217,15 @@ describe('ClipboardService getClipboardItem', () => {
     });
 
     test.each([
-        // ['Invalid lightning address that matches regex should show default lightning address', 'lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y', true, true, 1],
+        [
+            'Invalid lightning address that matches regex should show nothing',
+            'lnbc1pwr45dpp5q9wa3sjr4cnyvdh0wwufzldvlnm2qa5lc2sh3qkp3y',
+            true,
+            true,
+            true,
+            undefined,
+            0
+        ],
         ['Lightning address on payment server should show default when checkout is off.', lnbc[0], false, true, true, undefined, 1],
         ['Lightning address on payment server should show payment when checkout is on.', lnbc[0], true, true, true, 'Payment', 1],
         ['Lightning address not on payment server should not show payment when checkout is on.', lnbc[1], true, true, true, undefined, 1]
