@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+
+    button {
+      height: 20px;
+      min-width: auto;
+    }
+}
