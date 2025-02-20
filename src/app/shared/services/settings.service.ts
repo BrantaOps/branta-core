@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Settings } from '../models/settings';
+import { BitcoinUnitType, Settings } from '../models/settings';
 import { ReplaySubject } from 'rxjs';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class SettingsService {
 
     defaultSettings: Settings = {
         checkoutMode: false,
+        bitcoinUnitType: BitcoinUnitType.Sats,
         developerMode: false,
         clipboardHistory: {
             show: true

@@ -9,11 +9,14 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
 import { ClipboardService } from '../../shared/services/clipboard.service';
 import { HistoryService } from '../../shared/services/history.service';
 import { SettingsService } from '../../shared/services/settings.service';
+import { MatSelectModule } from '@angular/material/select';
+import { BitcoinUnitType } from '../../shared/models/settings';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [ReactiveFormsModule, MatSlideToggleModule, MatIconModule, MatTooltipModule, MatButtonModule],
+    imports: [ReactiveFormsModule, MatSlideToggleModule, MatIconModule, MatTooltipModule, MatButtonModule, MatSelectModule, MatInputModule],
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.scss'
 })
@@ -22,6 +25,8 @@ export class SettingsComponent {
 
     checkoutModeTooltip = 'Verify BTC/LN checkouts & invoices. Requires internet.';
     developerModeTooltip = "Only check this if you're a developer. Enables staging environment.";
+
+    BitcoinUnitTypes = Object.values(BitcoinUnitType);
 
     constructor(
         private settingsService: SettingsService,
@@ -33,6 +38,7 @@ export class SettingsComponent {
 
         this.formGroup = new FormGroup({
             checkoutMode: new FormControl(settings.checkoutMode),
+            bitcoinUnitType: new FormControl(settings.bitcoinUnitType),
             generalNotifications: new FormGroup({
                 bitcoinAddress: new FormControl(settings.generalNotifications.bitcoinAddress),
                 bitcoinPublicKey: new FormControl(settings.generalNotifications.bitcoinPublicKey),
