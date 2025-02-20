@@ -52,21 +52,21 @@ body {
         )
     );
 
-    @return mat.define-palette($hues);
+    @return mat.m2-define-palette($hues);
 }
 
 $custom-primary: create-palette($primary-color);
 $custom-accent: create-palette($secondary-color);
 $custom-warn: create-palette($error-color);
 
-$custom-theme: mat.define-dark-theme(
+$custom-theme: mat.m2-define-dark-theme(
     (
         color: (
             primary: $custom-primary,
             accent: $custom-accent,
             warn: $custom-warn
         ),
-        typography: mat.define-typography-config(),
+        typography: mat.m2-define-typography-config(),
         density: 0
     )
 );
