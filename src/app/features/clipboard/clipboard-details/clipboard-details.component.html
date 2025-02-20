@@ -55,7 +55,9 @@
                 </div>
                 <div class="item">
                     <div class="title">Amount:</div>
-                    <div class="value">{{ clipboardItem.amount }} SATS</div>
+                    <div class="value">
+                      <app-bitcoin-amount [value]="clipboardItem.amount" />
+                    </div>
                 </div>
                 <div class="item">
                     <div class="title">Description:</div>

@@ -1,0 +1,4 @@
+<div style="display: flex; flex-direction: row; gap: 5px;">
+    <div>{{ value | bitcoinAmount: settings.bitcoinUnitType }}</div>
+    <div style="cursor: pointer;" (click)="toggleBitcoinUnitType()">{{ settings.bitcoinUnitType }}</div>
+</div>

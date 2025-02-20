@@ -3,6 +3,13 @@ export interface Settings {
     developerMode: boolean;
     generalNotifications: GeneralNotifications;
     clipboardHistory: ClipboardHistory;
+    bitcoinUnitType: BitcoinUnitType;
+}
+
+export enum BitcoinUnitType {
+    Sats = 'Sats',
+    Bitcoin = 'Bitcoin',
+    MiliSats = 'Mili-Sats'
 }
 
 export interface ClipboardHistory {

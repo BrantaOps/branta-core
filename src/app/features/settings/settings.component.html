@@ -7,6 +7,16 @@
                     <mat-slide-toggle formControlName="checkoutMode">Checkout Mode</mat-slide-toggle>
                     <mat-icon class="icon material-symbols-outlined" [matTooltip]="checkoutModeTooltip" matTooltipPosition="right">help</mat-icon>
                 </div>
+                <div class="option">
+                    <mat-form-field>
+                        <mat-label>Bitcoin Unit</mat-label>
+                        <mat-select formControlName="bitcoinUnitType">
+                            @for (unitType of BitcoinUnitTypes; track unitType) {
+                                <mat-option [value]="unitType">{{ unitType }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
             <div class="section" formGroupName="generalNotifications">
                 <div class="title">Notifications</div>
