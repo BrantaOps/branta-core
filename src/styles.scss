@@ -1,8 +1,8 @@
 @use '@angular/material' as mat;
+@use 'sass:color';
+@use 'ngx-toastr/toastr' as *;
 @include mat.elevation-classes();
 @include mat.app-background();
-@import 'ngx-toastr/toastr';
-
 
 /* Colors */
 $background: #1b1b1b;
@@ -27,18 +27,19 @@ body {
     font-family: 'Avenir', sans-serif;
 }
 
+
 @function create-palette($base-color) {
     $hues: (
-        50: lighten($base-color, 40%),
-        100: lighten($base-color, 30%),
-        200: lighten($base-color, 20%),
-        300: lighten($base-color, 10%),
-        400: lighten($base-color, 5%),
+        50: color.adjust($base-color, $lightness: 40%),
+        100: color.adjust($base-color, $lightness: 30%),
+        200: color.adjust($base-color, $lightness: 20%),
+        300: color.adjust($base-color, $lightness: 10%),
+        400: color.adjust($base-color, $lightness: 5%),
         500: $base-color,
-        600: darken($base-color, 5%),
-        700: darken($base-color, 10%),
-        800: darken($base-color, 20%),
-        900: darken($base-color, 30%),
+        600: color.adjust($base-color, $blackness: 5%),
+        700: color.adjust($base-color, $blackness: 10%),
+        800: color.adjust($base-color, $blackness: 20%),
+        900: color.adjust($base-color, $blackness: 30%),
         contrast: (
             50: #000,
             100: #000,
