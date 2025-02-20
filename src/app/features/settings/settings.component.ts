@@ -15,7 +15,6 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'app-settings',
-    standalone: true,
     imports: [ReactiveFormsModule, MatSlideToggleModule, MatIconModule, MatTooltipModule, MatButtonModule, MatSelectModule, MatInputModule],
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.scss'

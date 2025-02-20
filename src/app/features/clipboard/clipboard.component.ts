@@ -11,7 +11,6 @@ import { BaseClipboardComponent } from './base-clipboard';
 
 @Component({
     selector: 'app-clipboard',
-    standalone: true,
     imports: [CommonModule, ClipboardDetailsComponent, ClipboardHistoryComponent],
     templateUrl: './clipboard.component.html',
     styleUrl: './clipboard.component.scss'

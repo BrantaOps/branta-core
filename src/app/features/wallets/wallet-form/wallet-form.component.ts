@@ -27,7 +27,6 @@ interface AddressConfirmed {
 
 @Component({
     selector: 'app-wallet-form',
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,

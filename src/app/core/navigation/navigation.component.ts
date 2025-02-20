@@ -7,7 +7,6 @@ import { VaultService } from '../../shared/services/vault.service';
 
 @Component({
     selector: 'app-navigation',
-    standalone: true,
     imports: [RouterModule, MatIconModule, MatTooltipModule],
     templateUrl: './navigation.component.html',
     styleUrl: './navigation.component.scss'

@@ -8,7 +8,6 @@ import { BitcoinAmountComponent } from '../../../shared/components/bitcoin-amoun
 
 @Component({
     selector: 'app-clipboard-details',
-    standalone: true,
     imports: [CommonModule, MatButtonModule, ExpandableTextComponent, BitcoinAmountComponent],
     templateUrl: './clipboard-details.component.html',
     styleUrl: './clipboard-details.component.scss'

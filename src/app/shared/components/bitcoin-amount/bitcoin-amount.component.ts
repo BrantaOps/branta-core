@@ -7,7 +7,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-bitcoin-amount',
-    standalone: true,
     imports: [BitcoinAmountPipe, MatButtonModule, MatTooltipModule],
     templateUrl: './bitcoin-amount.component.html',
     styleUrl: './bitcoin-amount.component.scss'
