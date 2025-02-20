@@ -35,7 +35,6 @@ export class SettingsComponent {
         public dialog: MatDialog
     ) {
         const settings = settingsService.get();
-        console.log(settings);
 
         this.formGroup = new FormGroup({
             checkoutMode: new FormControl(settings.checkoutMode),
@@ -54,7 +53,6 @@ export class SettingsComponent {
         });
 
         this.formGroup.valueChanges.subscribe((settings) => {
-            console.log('this ran', settings);
             this.settingsService.save(settings);
         });
 
