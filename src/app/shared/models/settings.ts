@@ -9,7 +9,7 @@ export interface Settings {
 export enum BitcoinUnitType {
     Sats = 'Sats',
     Bitcoin = 'Bitcoin',
-    MiliSats = 'Mili-Sats'
+    MilliSats = 'Millisatoshis'
 }
 
 export interface ClipboardHistory {

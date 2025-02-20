@@ -12,7 +12,7 @@ export class BitcoinAmountPipe implements PipeTransform {
                 return (value).toLocaleString('en-US');
             case BitcoinUnitType.Bitcoin:
                 return  (value / 100000000).toFixed(8);
-            case BitcoinUnitType.MiliSats:
+            case BitcoinUnitType.MilliSats:
                 return (value * 1000).toLocaleString('en-US');
         }
     }
