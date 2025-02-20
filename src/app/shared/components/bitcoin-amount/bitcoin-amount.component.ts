@@ -2,11 +2,13 @@ import { Component, Input } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { BitcoinUnitType, Settings } from '../../models/settings';
 import { BitcoinAmountPipe } from '../../pipes/bitcoin-amount.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-bitcoin-amount',
     standalone: true,
-    imports: [BitcoinAmountPipe],
+    imports: [BitcoinAmountPipe, MatButtonModule, MatTooltipModule],
     templateUrl: './bitcoin-amount.component.html',
     styleUrl: './bitcoin-amount.component.scss'
 })
