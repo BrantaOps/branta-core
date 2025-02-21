@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { ExpandableTextComponent } from "../../../shared/components/expandable-text/expandable-text.component";
+import { ExpandableTextComponent } from '../../../shared/components/expandable-text/expandable-text.component';
 import { ClipboardItem } from '../../../shared/models/clipboard-item';
 import { BaseClipboardComponent } from '../base-clipboard';
 import { BitcoinAmountComponent } from '../../../shared/components/bitcoin-amount/bitcoin-amount.component';

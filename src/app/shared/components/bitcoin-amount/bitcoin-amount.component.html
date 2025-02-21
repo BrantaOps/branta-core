@@ -1,4 +1,4 @@
 <div class="container">
-    <div class="value">{{ value | bitcoinAmount: settings.bitcoinUnitType }}</div>
-    <button mat-button (click)="toggleBitcoinUnitType()" matTooltip="Toggle Units" matTooltipPosition="right">{{ settings.bitcoinUnitType }}</button>
+    <div class="value">{{ value | bitcoinAmount: settings().bitcoinUnitType }}</div>
+    <button mat-button (click)="toggleBitcoinUnitType()" matTooltip="Toggle Units" matTooltipPosition="right">{{ settings().bitcoinUnitType }}</button>
 </div>

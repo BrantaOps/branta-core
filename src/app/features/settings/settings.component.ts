@@ -33,7 +33,7 @@ export class SettingsComponent {
         private clipboardService: ClipboardService,
         public dialog: MatDialog
     ) {
-        const settings = settingsService.get();
+        const settings = settingsService.settings();
 
         this.formGroup = new FormGroup({
             checkoutMode: new FormControl(settings.checkoutMode),
