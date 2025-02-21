@@ -9,7 +9,6 @@ import { BaseClipboardComponent } from '../base-clipboard';
 
 @Component({
     selector: 'app-clipboard-history',
-    standalone: true,
     imports: [CommonModule, MatButtonModule, MatIconModule, ExpandableTextComponent],
     templateUrl: './clipboard-history.component.html',
     styleUrl: './clipboard-history.component.scss'

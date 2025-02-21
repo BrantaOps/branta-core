@@ -7,7 +7,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-bitcoin-amount',
-    standalone: true,
     imports: [BitcoinAmountPipe, MatButtonModule, MatTooltipModule],
     templateUrl: './bitcoin-amount.component.html',
     styleUrl: './bitcoin-amount.component.scss'
@@ -15,22 +14,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class BitcoinAmountComponent {
     @Input() value: number;
 
-    settings: Settings;
+    settings = (): Settings => this.settingsService.settings();
 
-    constructor(private settingsService: SettingsService) {
-        this.settingsService.settings.subscribe((settings) => {
-            this.settings = settings;
-        });
-    }
+    types = Object.values(BitcoinUnitType);
+
+    constructor(private settingsService: SettingsService) { }
 
     toggleBitcoinUnitType() {
-        var types = Object.values(BitcoinUnitType);
 
-        var index = types.indexOf(this.settings.bitcoinUnitType) + 1;
+        var index = this.types.indexOf(this.settings().bitcoinUnitType) + 1;
 
         this.settingsService.save({
-            ...this.settings,
-            bitcoinUnitType: types[index % types.length]
+            ...this.settings(),
+            bitcoinUnitType: this.types[index % this.types.length]
         });
     }
 }

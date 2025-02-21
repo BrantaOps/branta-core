@@ -11,7 +11,6 @@ import { ClipboardService } from '../../shared/services/clipboard.service';
 
 @Component({
     selector: 'app-vaults',
-    standalone: true,
     imports: [MatButtonModule, MatIconModule, MatTooltipModule],
     templateUrl: './vaults.component.html',
     styleUrl: './vaults.component.scss'

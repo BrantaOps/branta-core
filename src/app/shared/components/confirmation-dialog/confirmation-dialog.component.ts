@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
 
 @Component({
     selector: 'app-confirmation-dialog',
-    standalone: true,
     imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
     templateUrl: './confirmation-dialog.component.html',
     styleUrl: './confirmation-dialog.component.scss'

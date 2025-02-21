@@ -21,7 +21,6 @@ export class ClipboardService extends BaseClipboardService {
 
     private _wallets: Wallet[] = [];
     private _vaults: Vault[] = [];
-    private _settings: Settings;
 
     public static XPUB_REGEX = '^([xyYzZtuUvV]pub[1-9A-HJ-NP-Za-km-z]{79,108})$';
 
@@ -48,15 +47,11 @@ export class ClipboardService extends BaseClipboardService {
         this.walletService.wallets.subscribe((wallets) => {
             this._wallets = wallets;
         });
-
-        this.settingsService.settings.subscribe((settings) => {
-            this._settings = settings;
-        });
     }
 
     public async rerunGetClipboardItem(notify: boolean = false): Promise<void> {
         this.clipboardItem.next(
-            await ClipboardService.getClipboardItem(this._clipboardText, notify, this._vaults, this._wallets, this._settings, this.serverService)
+            await ClipboardService.getClipboardItem(this._clipboardText, notify, this._vaults, this._wallets, this.settingsService.settings(), this.serverService)
         );
     }
 }

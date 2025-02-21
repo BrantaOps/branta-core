@@ -8,7 +8,6 @@ import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     imports: [CommonModule, RouterOutlet, NavigationComponent, MatButtonModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'

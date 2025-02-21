@@ -13,7 +13,6 @@ export interface DescriptorWallet {
 
 @Component({
     selector: 'app-descriptor-form-dialog',
-    standalone: true,
     imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, FormsModule, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
     templateUrl: './descriptor-form-dialog.component.html',
     styleUrl: './descriptor-form-dialog.component.scss'
