@@ -16,7 +16,7 @@ export class ServerService {
     }
 
     private get baseUrl(): string {
-        const subdomain = this.settingsService.get().developerMode ? 'staging' : 'payments';
+        const subdomain = this.settingsService.settings().developerMode ? 'staging' : 'payments';
 
         return `https://${subdomain}.branta.pro/v1`;
     }

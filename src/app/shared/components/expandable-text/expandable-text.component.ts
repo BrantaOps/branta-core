@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-expandable-text',
-    standalone: true,
     imports: [],
     templateUrl: './expandable-text.component.html',
     styleUrl: './expandable-text.component.scss'

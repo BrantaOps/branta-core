@@ -1,16 +1,10 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { BitcoinUnitType, Settings } from '../models/settings';
-import { ReplaySubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SettingsService {
-    private _settings: Settings;
-    public settings = new ReplaySubject<Settings>();
-
-    private readonly SETTINGS_KEY = 'settings';
-
     defaultSettings: Settings = {
         checkoutMode: false,
         bitcoinUnitType: BitcoinUnitType.Sats,
@@ -27,6 +21,11 @@ export class SettingsService {
         }
     };
 
+    #settings = signal<Settings>(this.defaultSettings);
+    settings = computed(this.#settings);
+
+    private readonly SETTINGS_KEY = 'settings';
+
     constructor() {
         this.load();
     }
@@ -35,24 +34,13 @@ export class SettingsService {
         const settings = localStorage.getItem(this.SETTINGS_KEY);
         const parsedSettings: Partial<Settings> = settings ? JSON.parse(settings) : {};
 
-        this._settings = this.mergeSettings(this.defaultSettings, parsedSettings);
-
-        this.update();
+        this.#settings.update(() => this.mergeSettings(this.defaultSettings, parsedSettings));
     }
 
     save(settings: Settings) {
-        this._settings = settings;
         localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
 
-        this.update();
-    }
-
-    get(): Settings {
-        return this._settings;
-    }
-
-    private update() {
-        this.settings.next(this._settings);
+        this.#settings.update(() => settings);
     }
 
     private mergeSettings(defaults: Settings, overrides: Partial<Settings>): Settings {

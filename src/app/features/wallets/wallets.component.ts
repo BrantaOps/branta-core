@@ -15,7 +15,6 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 @Component({
     selector: 'app-wallets',
-    standalone: true,
     imports: [MatButtonModule, MatIconModule, RouterModule, MatTooltipModule, MatFormFieldModule, MatInputModule, AlertComponent],
     templateUrl: './wallets.component.html',
     styleUrl: './wallets.component.scss'
