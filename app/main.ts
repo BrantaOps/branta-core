@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as url from 'url';
 import packageJson from '../package.json';
 import { loadRecords, saveRecords } from './lib/storage.js';
+import { pullBrantaDataViaNostr, pushBrantaDataViaNostr } from './lib/nostr-sync.js';
 import { processUrl } from './lib/vault.js';
 import { getAllAddresses, verifyAddress, verifyXpub } from './lib/verify-address.js';
 import { decodeLightningPayment } from './lib/lightning.js';
@@ -173,6 +174,32 @@ function createWindow() {
 
     ipcMain.handle('retrieve-data', async (_event, name) => {
         return loadRecords(name);
+    });
+
+    ipcMain.handle('nostr-sync-push', async (_event, nsec) => {
+        const wallets = loadRecords('wallet');
+        const history = loadRecords('history');
+
+        return pushBrantaDataViaNostr(nsec, wallets, history);
+    });
+
+    ipcMain.handle('nostr-sync-pull', async (_event, nsec) => {
+        const result = await pullBrantaDataViaNostr(nsec);
+        if (!result.found) {
+            return result;
+        }
+
+        saveRecords('wallet', result.payload.wallets);
+        saveRecords('history', result.payload.history);
+
+        return {
+            found: true,
+            relay: result.relay,
+            eventId: result.eventId,
+            updated_at: result.payload.updated_at,
+            walletCount: result.payload.wallets.length,
+            historyCount: result.payload.history.length
+        };
     });
 
     ipcMain.handle('open-url', async (_event, url) => openUrl(url));

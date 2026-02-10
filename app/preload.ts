@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld('electron', {
     },
     storeData: (name: string, data: Object[]) => ipcRenderer.invoke('store-data', name, data),
     retrieveData: (name: string) => ipcRenderer.invoke('retrieve-data', name),
+    nostrSyncPush: (nsec: string) => ipcRenderer.invoke('nostr-sync-push', nsec),
+    nostrSyncPull: (nsec: string) => ipcRenderer.invoke('nostr-sync-pull', nsec),
     verifyAddress: (wallets: Wallet[], address: string) => ipcRenderer.invoke('verify-address', wallets, address),
     verifyXpub: (xpub: string) => ipcRenderer.invoke('verify-xpub', xpub),
     showNotification: (title: string, body: string) => ipcRenderer.invoke('show-notification', title, body),

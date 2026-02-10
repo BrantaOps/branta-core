@@ -76,3 +76,20 @@
     gap: 10px;
     padding-top: 10px;
 }
+
+.sync-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.hint {
+    padding-top: 8px;
+    display: flex;
+    justify-content: center;
+    color: $text-gray;
+    font-size: 12px;
+    text-align: center;
+}

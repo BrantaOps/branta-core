@@ -66,6 +66,18 @@
                     <div class="title">Expiry:</div>
                     <div class="value">{{ clipboardItem.expiry }}</div>
                 </div>
+            } @else if (isNsecClipboardItem(clipboardItem)) {
+                <div class="item">
+                    <div class="title">Detected:</div>
+                    <div class="value">Nostr nsec (private key)</div>
+                </div>
+                <div class="sync-container">
+                    <button mat-button color="primary" (click)="onNostrSyncPush()">Sync via NOSTR</button>
+                    <button mat-button (click)="onNostrSyncPull()">Pull Branta data from NOSTR?</button>
+                </div>
+                <div class="hint">
+                    Encrypts your local wallets and history with your nsec and stores it on a relay. Only the same nsec can decrypt.
+                </div>
             } @else {
               <app-expandable-text *ngIf="!clipboardItem.private" class="value" [text]="clipboardItem.value" [isAddress]="true" />
             }

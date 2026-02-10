@@ -10,6 +10,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { lastValueFrom } from 'rxjs';
 import { ServerService } from '../../../shared/services/server.service';
 import { ToastrService } from 'ngx-toastr';
+import { ClipboardItemType } from '../../../shared/models/clipboard-item';
+import { NostrPrivateKeyRegExp } from '../../../shared/services/regex';
 
 @Component({
     selector: 'app-clipboard-details',
@@ -44,6 +46,57 @@ export class ClipboardDetailsComponent extends BaseClipboardComponent {
 
             this.showPaymentNotFoundToast(value);
         })();
+    }
+
+    isNsecClipboardItem(item: ClipboardItem): boolean {
+        const value = item?.value ?? '';
+        return item.type === ClipboardItemType.PrivateKey && NostrPrivateKeyRegExp.test(value.trim());
+    }
+
+    async onNostrSyncPush(): Promise<void> {
+        const nsec = this.clipboardItem?.value?.trim();
+        if (!nsec || !NostrPrivateKeyRegExp.test(nsec)) {
+            this.toastrService.error('No valid nsec detected in clipboard.');
+            return;
+        }
+
+        this.toastrService.info('Publishing encrypted Branta data to Nostr relays...');
+
+        try {
+            const result = await window.electron.nostrSyncPush(nsec);
+            this.toastrService.success(`Synced to ${result.publishedTo.length} relay(s).`);
+        } catch (e: any) {
+            this.toastrService.error(`Sync failed: ${String(e?.message ?? e)}`);
+        }
+    }
+
+    async onNostrSyncPull(): Promise<void> {
+        const nsec = this.clipboardItem?.value?.trim();
+        if (!nsec || !NostrPrivateKeyRegExp.test(nsec)) {
+            this.toastrService.error('No valid nsec detected in clipboard.');
+            return;
+        }
+
+        const ok = window.confirm('Pull Branta data from Nostr? This will overwrite local wallets/history.');
+        if (!ok) {
+            return;
+        }
+
+        this.toastrService.info('Fetching encrypted Branta data from Nostr relays...');
+
+        try {
+            const result = await window.electron.nostrSyncPull(nsec);
+            if (!result.found) {
+                this.toastrService.warning('No Branta sync payload found on the configured relays.');
+                return;
+            }
+
+            this.toastrService.success(
+                `Pulled data from ${result.relay}. wallets=${result.walletCount}, history=${result.historyCount}`
+            );
+        } catch (e: any) {
+            this.toastrService.error(`Pull failed: ${String(e?.message ?? e)}`);
+        }
     }
 
     private showPaymentNotFoundToast(value: string): void {
