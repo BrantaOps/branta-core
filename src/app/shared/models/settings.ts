@@ -3,6 +3,7 @@ export interface Settings {
     generalNotifications: GeneralNotifications;
     clipboardHistory: ClipboardHistory;
     bitcoinUnitType: BitcoinUnitType;
+    disclaimerAccepted: boolean;
 }
 
 export enum ClipboardHistoryRolloffType {

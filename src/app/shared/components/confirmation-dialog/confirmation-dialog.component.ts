@@ -9,6 +9,6 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
     styleUrl: './confirmation-dialog.component.scss'
 })
 export class ConfirmationDialogComponent {
-    readonly data = inject<{ title: string, message: string | null, submitText: string }>(MAT_DIALOG_DATA);
+    readonly data = inject<{ title: string, message: string | null, submitText: string, hideCancel?: boolean }>(MAT_DIALOG_DATA);
 }
 

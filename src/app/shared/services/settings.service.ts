@@ -8,6 +8,7 @@ export class SettingsService {
     defaultSettings: Settings = {
         bitcoinUnitType: BitcoinUnitType.Sats,
         developerMode: false,
+        disclaimerAccepted: false,
         clipboardHistory: {
             show: true,
             rolloffType: ClipboardHistoryRolloffType.Never
