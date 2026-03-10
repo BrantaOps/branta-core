@@ -1,0 +1,1 @@
+// Add Nostr sync logic\nconst nostrSync = () => {\n  const nsec = getNsecFromClipboard();\n  const payload = JSON.stringify(loadUserData());\n  const encrypted = encryptPayload(nsec, payload);\n  publishToNostrRelay(encrypted, ['wss://relay1', 'wss://relay2']);\n};\naddSyncButton('Sync via NOSTR', nostrSync);
